@@ -197,7 +197,7 @@ final class MainController
      */
     protected function loadDependencies()
     {
-        $objAutoload = new AutoLoad();
+        $objAutoload = new AutoLoad($this->conf);
         spl_autoload_register(array(&$objAutoload, 'includeClassFile'));
     }
 

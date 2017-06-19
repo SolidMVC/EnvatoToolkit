@@ -12,11 +12,12 @@ namespace EnvatoToolkit\Models;
 
 class AutoLoad
 {
-    private $debugMode = 0;
+    protected $debugMode = 0;
+    protected $conf = NULL;
 
-    public function __construct()
+    public function __construct(Configuration &$paramConf)
     {
-        // Nothing here
+        $this->conf = $paramConf;
     }
 
     /**
@@ -83,8 +84,13 @@ class AutoLoad
         {
             // Then separate namespace and class name
             $namespace = substr($className, 0, $lastNamespacePosition);
+
+            // Replace 'EnvatoToolkit' folder name with $this->pluginDirname
+            // Note: we need that for the scenario in case if the plugin stays in 'plugins/envato-toolkit' folder instead of 'plugins/EnvatoToolkit'
+            $namespace = str_replace('EnvatoToolkit\\', $this->conf->getPluginDirname().'\\', $namespace);
+
             $className = substr($className, $lastNamespacePosition + 1);
-            $filePath  = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
+            $filePath  = str_replace('\\', DIRECTORY_SEPARATOR, $namespace).DIRECTORY_SEPARATOR;
         }
 
         // Check if this is an interface or a class and set specific prefix to it

@@ -1,6 +1,7 @@
 === Envato Toolkit ===
 Contributors: KestutisIT
-Website Link: https://profiles.wordpress.org/KestutisIT
+Donate link: https://profiles.wordpress.org/KestutisIT
+Website link: https://profiles.wordpress.org/KestutisIT
 Tags: Envato Toolkit, Purchase code validation, update checker, Envato API
 Requires at least: 4.6
 Tested up to: 4.8
