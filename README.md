@@ -16,17 +16,17 @@
 
 **License URI:** https://opensource.org/licenses/MIT
 
+Validate purchase code, check for item update & support expiration, download newest version, lookup for user details, search for Envato item id & more
 
-It is a 3 files library + Visual UI, to validate the purchase codes of your customers, get details about specific Envato user (total followers, total sales, avatar), get his license purchase and support expiration dates, license type he bought, check for updates of purchased plugins and themes and get the download links for them. Plus this library has Envato Item Id search feature by providing plugin's or theme's name and author.
 
 ## Description ##
 
 It is a 3 files library + Visual UI, to validate the purchase codes of your customers,
-get details about specific Envato user (total followers, total sales, avatar),
+get details about specific Envato user (country, city, total followers, total sales, avatar),
 get his license purchase and support expiration dates, license type he bought,
 check for updates of purchased plugins and themes and get the download links for them.
 
-Plus this library has Envato Item Id search feature by providing plugin's or theme's name and author.
+Plus - this library has Envato Item Id search feature by providing plugin's or theme's name and author.
 
 So - yes, this is a tool you, as a developer / author, have been looking for months.
 And the main purpose of this plugin is to help you to start much easier without having a headache
