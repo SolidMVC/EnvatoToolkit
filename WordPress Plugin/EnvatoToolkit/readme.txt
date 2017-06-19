@@ -1,25 +1,16 @@
-# Envato Toolkit #
-
-**Contributors:** KestutisIT
-
-**Website Link:** https://profiles.wordpress.org/KestutisIT
-
-**Tags:** Envato Toolkit, Purchase code validation, update checker, Envato API
-
-**Requires at least:** 4.6
-
-**Tested up to:** 4.8
-
-**Stable tag:** 1.0
-
-**License:** MIT License
-
-**License URI:** https://opensource.org/licenses/MIT
-
+=== Envato Toolkit ===
+Contributors: KestutisIT
+Website Link: https://profiles.wordpress.org/KestutisIT
+Tags: Envato Toolkit, Purchase code validation, update checker, Envato API
+Requires at least: 4.6
+Tested up to: 4.8
+Stable tag: 1.0
+License: MIT License
+License URI: https://opensource.org/licenses/MIT
 
 It is a 3 files library + Visual UI, to validate the purchase codes of your customers, get details about specific Envato user (total followers, total sales, avatar), get his license purchase and support expiration dates, license type he bought, check for updates of purchased plugins and themes and get the download links for them. Plus this library has Envato Item Id search feature by providing plugin's or theme's name and author.
 
-## Description ##
+== Description ==
 
 It is a 3 files library + Visual UI, to validate the purchase codes of your customers,
 get details about specific Envato user (total followers, total sales, avatar),
@@ -48,7 +39,7 @@ if($token == "")
 {
 	return new \WP_Error('api_token_error', __('An API token is required.', 'envato-toolkit'));
 }
-``` 
+```
 
 Now lets see how the same task traceback looks like in `WordPress - Envato Market` plugin:
 
@@ -107,7 +98,7 @@ Now lets see how the same task traceback looks like in `WordPress - Envato Marke
         ),
     );
     `
-	
+
 7. `[admin.php -> set_bearer_args(..)]` Pass the wrapped token one more time - this time get it from get_option:
 
     `
@@ -141,7 +132,7 @@ WordPress method call, but now I'm getting confused again - what is that `option
 10. `[envato-market.php -> init_globals()]` Here is it is - the `option name` key name is... Oh wait...
 No it is not here it. It is equals to another variable, who is is put
 in another clean-up function - look like I'm keep seeing this for the 2 time in the tree - the sanitization of sanitization:
-    
+
     `
     $this->option_name = self::sanitize_key( $this->slug );
     `
@@ -346,33 +337,41 @@ $view->targetThemeAuthor = esc_html($sanitizedTargetThemeAuthor); // Ready for p
 $view->foundThemeId = $objToolkit->getItemIdByThemeAndAuthorIfPurchased($sanitizedTargetThemeName, $sanitizedTargetThemeAuthor);
 ```
 
-## Installation ##
+
+== Installation ==
 
 This section describes how to install the plugin and get it working.
 
-1. Upload `EnvatoToolkit` to the `/wp-content/plugins/` directory.
+1. Upload `wp-comment-notes` to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Go to admin menu item `EnvatoToolkit` and enter your Envato Username,
-Envato API Key and Envato Private Token.
+   Envato API Key and Envato Private Token.
 4. That's it.
 
 
-## Frequently Asked Questions ##
+== Frequently Asked Questions ==
 
 
-### How does it work? ###
+= How does it work? =
 
 This plugins uses both - Envato Edge API and Envato Market API to retrieve required data automatically, without any need of server-in-the-middle.
 So there is no need to save your head revision number or last version on your server, it will get that that automatically from Envato via it's API.
 
 
-## Changelog ##
+== Screenshots ==
 
-### 1.0 ###
+1. Envato Toolkit - Search input
+2. Envato Toolkit - Search results
+
+
+
+== Changelog ==
+
+= 1.0 =
 * Initial release!
 
 
-## Upgrade Notice ##
+== Upgrade Notice ==
 
-### 1.0 ###
+= 1.0 =
 * Initial release!
