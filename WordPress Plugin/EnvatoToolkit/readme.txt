@@ -1,7 +1,7 @@
 === Envato Toolkit ===
 Contributors: KestutisIT
 Donate link: https://profiles.wordpress.org/KestutisIT
-Website link: https://profiles.wordpress.org/KestutisIT
+Website link: https://wordpress.org/plugins/toolkit-for-envato/
 Tags: Envato Toolkit, Purchase code validation, update checker, Envato API
 Requires at least: 4.6
 Tested up to: 4.8
@@ -14,121 +14,110 @@ Validate purchase code, check for item update & support expiration, download new
 
 == Description ==
 
-It is a 3 files library + Visual UI, to validate the purchase codes of your customers,
-get details about specific Envato user (country, city, total followers, total sales, avatar),
-get his license purchase and support expiration dates, license type he bought,
-check for updates of purchased plugins and themes and get the download links for them.
+It is a 3 files library + Visual UI, to validate the purchase codes of your customers, get details about specific Envato user (country, city, total followers, total sales, avatar), get his license purchase and support expiration dates, license type he bought, check for updates of purchased plugins and themes and get the download links for them.
 
 Plus - this library has Envato Item Id search feature by providing plugin's or theme's name and author.
 
-So - yes, this is a tool you, as a developer / author, have been looking for months.
-And the main purpose of this plugin is to help you to start much easier without having a headache
-trying to understand `WordPress - Envato Market` plugins code, that is the only one built by Envato,
-and has so complicated and unclear code, that you never get how it works (see example below).
+So - yes, this is a tool you, as a developer / author, have been looking for months. And the main purpose of this plugin is to help you to start much easier without having a headache trying to understand `WordPress - Envato Market` plugins code, that is the only one built by Envato, and has so complicated and unclear code, that you never get how it works (see example below).
 
-When I tried to create plugin's `[Check for Update]` and `[Validate Purchase Code]` feature-buttons in the plugin myself,
-and I saw the code of the `WordPress - Envato Market` plugin, I was shocked how badly it is written
-and how you should not to code.
+When I tried to create plugin's `[Check for Update]` and `[Validate Purchase Code]` feature-buttons in the plugin myself, and I saw the code of the `WordPress - Envato Market` plugin, I was shocked how badly it is written and how you should not to code.
 
-For example - you would like to give an error message, if Envato user token is empty,
-which is a required string, i.e. - `pAA0aBCdeFGhiJKlmNOpqRStuVWxyZ44`.
-If you like K.I.S.S., PSR-2, D.R.Y., clean code coding standards and paradigms,
-you'd probably just have these four lines of code, so that every developer would get it:
+For example - you would like to give an error message, if Envato user token is empty, which is a required string, i.e. - `pAA0aBCdeFGhiJKlmNOpqRStuVWxyZ44`. If you like K.I.S.S., PSR-2, D.R.Y., clean code coding standards and paradigms, you'd probably just have these four lines of code, so that every developer would get it:
 
-```
+`
 $token = get_user_meta(get_current_user_id(), 'envato_token', TRUE);
 if($token == "")
 {
 	return new \WP_Error('api_token_error', __('An API token is required.', 'envato-toolkit'));
 }
-```
+`
 
 Now lets see how the same task traceback looks like in `WordPress - Envato Market` plugin:
 
 1. `[Api.php -> request(..)]` Check if the token is empty:
 
     `
-    if ( empty( $token ) )
-    {
-        return new WP_Error( 'api_token_error', __( 'An API token is required.', 'envato-market' ) );
-    }
+if ( empty( $token ) )
+{
+	return new WP_Error( 'api_token_error', __( 'An API token is required.', 'envato-market' ) );
+}
     `
 
 2. `[Api.php -> request(..)]` Parse it from another string:
 
     `
-    $token = trim( str_replace( 'Bearer', '', $args['headers']['Authorization'] ) );
+$token = trim( str_replace( 'Bearer', '', $args['headers']['Authorization'] ) );
     `
 
 3. `[Api.php -> request(..)]` Parse it one more time - this time from arguments array:
 
     `
-    public function request( $url, $args = array() ) {
-        $defaults = array(
-            'timeout' => 20,
-        );
-        $args = wp_parse_args( $args, $defaults );
-    }
+public function request( $url, $args = array() ) {
+	$defaults = array(
+		'timeout' => 20,
+	);
+	$args = wp_parse_args( $args, $defaults );
+}
     `
 
 4. `[Api.php -> download(..)]` Transfer the token variable one more time - this time via params:
 
     `
-    class Envato_Market_API {
-        public function download( $id, $args = array() ) {
-            $url = 'https://api.envato.com/v2/market/buyer/download?item_id=' . $id . '&shorten_url=true';
-            return $this->request( $url, $args );
-        }
-    }
+class Envato_Market_API {
+	public function download( $id, $args = array() ) {
+		$url = 'https://api.envato.com/v2/market/buyer/download?item_id=' . $id . '&shorten_url=true';
+		return $this->request( $url, $args );
+	}
+}
     `
 
 5. `[admin.php -> maybe_deferred_download(..)]` Pass it again - this time get it to args array from another method call:
 
     `
-    function maybe_deferred_download( $options ) {
-        $args = $this->set_bearer_args();
-        $options['package'] = envato_market()->api()->download( $vars['item_id'], $args );
-        return $options;
-    }
+function maybe_deferred_download( $options ) {
+	$args = $this->set_bearer_args();
+	$options['package'] = envato_market()->api()->download( $vars['item_id'], $args );
+	return $options;
+}
     `
 
 6. `[admin.php -> set_bearer_args(..)]` Wrap the token into multi-dimensional string array:
     `
-    $args = array(
-        'headers' => array(
-            'Authorization' => 'Bearer ' . $token,
-        ),
-    );
+$args = array(
+	'headers' => array(
+		'Authorization' => 'Bearer ' . $token,
+	),
+);
     `
 
 7. `[admin.php -> set_bearer_args(..)]` Pass the wrapped token one more time - this time get it from get_option:
 
     `
-    foreach ( envato_market()->get_option( 'items', array() ) as $item ) {
-        if ( $item['id'] === $id ) {
-            $token = $item['token'];
-            break;
-        }
-    }
+foreach ( envato_market()->get_option( 'items', array() ) as $item ) {
+	if ( $item['id'] === $id ) {
+		$token = $item['token'];
+		break;
+	}
+}
     `
 
 8. `[admin.php -> get_option(..)]` So what's in this `get_option`? - Correct, another call to another method - `get_options()`:
 
     `
-    public function get_option( $name, $default = '' ) {
-        $options = self::get_options();
-        $name = self::sanitize_key( $name );
-        return isset( $options[ $name ] ) ? $options[ $name ] : $default;
-    }
+public function get_option( $name, $default = '' ) {
+	$options = self::get_options();
+	$name = self::sanitize_key( $name );
+	return isset( $options[ $name ] ) ? $options[ $name ] : $default;
+}
     `
 
 9. `[admin.php -> get_options()]` Finally, after almost 10 steps in the tree, we are finally getting the original
 WordPress method call, but now I'm getting confused again - what is that `option_name` variable here:
 
     `
-    public function get_options() {
-        return get_option( $this->option_name, array() );
-    }
+public function get_options() {
+	return get_option( $this->option_name, array() );
+}
     `
 
 10. `[envato-market.php -> init_globals()]` Here is it is - the `option name` key name is... Oh wait...
@@ -136,34 +125,26 @@ No it is not here it. It is equals to another variable, who is is put
 in another clean-up function - look like I'm keep seeing this for the 2 time in the tree - the sanitization of sanitization:
 
     `
-    $this->option_name = self::sanitize_key( $this->slug );
+$this->option_name = self::sanitize_key( $this->slug );
     `
 
 11. `[envato-market.php -> init_globals()]` So the `option name` key name is the name of `$this->slug`.
 Now lets see what is the value of `$this->slug`:
     `
-    $this->slug        = 'envato-market';
+$this->slug        = 'envato-market';
     `
 
-So it takes __eleven (!)__ steps to understand one variable. And the whole code of that plugin is like that.
-So, the example above was the headache I had, until I realized that I must write a new Envato API Management Toolkit,
+So it takes __eleven (!)__ steps to understand one variable. And the whole code of that plugin is like that. The example above was the headache I had, until I realized that I must write a new Envato API Management Toolkit,
 instead of trying to use what Envato is giving, because otherwise I won't get anything working ever.
 
-And, I believe, that many other developers had the same issue when tried to create update check feature
-for their plugins or themes.
+And, I believe, that many other developers had the same issue when tried to create update check feature for their plugins or themes.
 
-So instead of using that library for myself, I decided that I want to help all these developers to save their time,
-and I'm sharing this code with you. I'm releasing it under MIT license, which allows you to use this code
-in your plugin without any restrictions for both - free and commercial use.
+So instead of using that library for myself, I decided that I want to help all these developers to save their time, and I'm sharing this code with you. I'm releasing it under MIT license, which allows you to use this code in your plugin without any restrictions for both - free and commercial use.
 
 Plus - I'm giving a promise to you, that this plugin is and will always be 100% free, without any ads,
 'Subscribe', 'Follow us', 'Check our page', 'Get Pro Version' or similar links.
 
-If you created in hi-quality code a valuable additional functionality to the library and you want to share it
-with everyone - I'm open here to support your efforts, and add your code to the plugin's library,
-so that we all together make this plugin better for authors - the better is the plugin,
-the better plugins authors will make for their customers. The better quality products we will have on the internet,
-the happier people will be all over the world.
+If you created in hi-quality code a valuable additional functionality to the library and you want to share it with everyone - I'm open here to support your efforts, and add your code to the plugin's library, so that we all together make this plugin better for authors - the better is the plugin, the better plugins authors will make for their customers. The better quality products we will have on the internet, the happier people will be all over the world.
 
 Finally - the code is poetry - __the better is the plugin, the happier is the world__.
 
@@ -171,7 +152,7 @@ Finally - the code is poetry - __the better is the plugin, the happier is the wo
 
 The pseudo-code of example output of the plugin is this:
 
-```
+`
 Details about you:
 ----------------------------------------------------------
 List of all different plugins you bought:
@@ -246,11 +227,11 @@ Found Plugin Id: <?=$foundPluginId;?>
 Searched for Name: <?=$targetThemeName;?>
 Searched for Author: <?=$targetThemeAuthor;?>
 Found Theme Id: <?=$foundThemeId;?>
-```
+`
 
 And the example input of the output above, it this:
 
-```
+`
 $objToolkit = new EnvatoAPIManager($toolkitSettings);
 
 // Details about you
@@ -337,14 +318,14 @@ $view->foundPluginId = $objToolkit->getItemIdByPluginAndAuthorIfPurchased($sanit
 $view->targetThemeName = esc_html($sanitizedTargetThemeName); // Ready for print
 $view->targetThemeAuthor = esc_html($sanitizedTargetThemeAuthor); // Ready for print
 $view->foundThemeId = $objToolkit->getItemIdByThemeAndAuthorIfPurchased($sanitizedTargetThemeName, $sanitizedTargetThemeAuthor);
-```
+`
 
 
 == Installation ==
 
 This section describes how to install the plugin and get it working.
 
-1. Upload `wp-comment-notes` to the `/wp-content/plugins/` directory.
+1. Upload `EnvatoToolkit` (or `toolkit-for-envato`) to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Go to admin menu item `EnvatoToolkit` and enter your Envato Username,
    Envato API Key and Envato Private Token.
@@ -369,11 +350,17 @@ So there is no need to save your head revision number or last version on your se
 
 == Changelog ==
 
+= 1.1 =
+* Removed 1 redundant API class method that should be handled by the controller, not a model. Plus, for security reasons, changelog.txt is no more in the plugin folder (so that there would be no way to discover the actual plugin version by public.
+
 = 1.0 =
 * Initial release!
 
 
 == Upgrade Notice ==
+
+= 1.1 =
+* Just drag and drop new plugin folder.
 
 = 1.0 =
 * Initial release!

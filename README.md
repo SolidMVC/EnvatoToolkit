@@ -2,7 +2,7 @@
 
 **Contributors:** KestutisIT
 
-**Website Link:** https://profiles.wordpress.org/KestutisIT
+**Website Link:** https://wordpress.org/plugins/toolkit-for-envato/
 
 **Tags:** Envato Toolkit, Purchase code validation, update checker, Envato API
 
@@ -153,7 +153,7 @@ Now lets see what is the value of `$this->slug`:
     `
 
 So it takes __eleven (!)__ steps to understand one variable. And the whole code of that plugin is like that.
-So, the example above was the headache I had, until I realized that I must write a new Envato API Management Toolkit,
+The example above was the headache I had, until I realized that I must write a new Envato API Management Toolkit,
 instead of trying to use what Envato is giving, because otherwise I won't get anything working ever.
 
 And, I believe, that many other developers had the same issue when tried to create update check feature
@@ -368,11 +368,17 @@ So there is no need to save your head revision number or last version on your se
 
 ## Changelog ##
 
+### 1.1 ###
+* Removed 1 redundant API class method that should be handled by the controller, not a model. Plus, for security reasons, changelog.txt is no more in the plugin folder (so that there would be no way to discover the actual plugin version by public.
+
 ### 1.0 ###
 * Initial release!
 
 
 ## Upgrade Notice ##
+
+### 1.1 ###
+* Just drag and drop new plugin folder.
 
 ### 1.0 ###
 * Initial release!
