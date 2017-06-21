@@ -155,6 +155,7 @@ final class SearchController
             $view->nameOfTargetPluginId = esc_html($objToolkit->getItemName($sanitizedTargetPluginId));
             $view->availablePluginVersion = $availablePluginVersion;
             $view->pluginUpdateAvailable = $pluginUpdateAvailable;
+            // It will return the download link only if the update is available, and it is not yet exceeded downloads limit
             $view->pluginUpdateDownloadUrl = $pluginUpdateAvailable ? $objToolkit->getDownloadUrlIfPurchased($sanitizedTargetPluginId) : '';
 
             // 4. Status of Purchased Theme ID
@@ -166,6 +167,7 @@ final class SearchController
             $view->nameOfTargetThemeId = esc_html($objToolkit->getItemName($sanitizedTargetThemeId));
             $view->availableThemeVersion = $availableThemeVersion;
             $view->themeUpdateAvailable = $themeUpdateAvailable;
+            // It will return the download link only if the update is available, and it is not yet exceeded downloads limit
             $view->themeUpdateDownloadUrl = $themeUpdateAvailable ? $objToolkit->getDownloadUrlIfPurchased($sanitizedTargetThemeId) : '';
 
             // 5. Envato Item Id of Purchased Plugin

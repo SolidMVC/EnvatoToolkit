@@ -316,23 +316,25 @@ $view->targetUserSales = $targetUserDetails['sales'];
 $view->targetUserFollowers = $targetUserDetails['followers'];
 
 // 3. Status of Purchased Plugin ID
-$pluginUpdateAvailable = $objToolkit->checkPurchasedItemUpdateAvailable($sanitizedTargetPluginId, $sanitizedInstalledPluginVersion);
+$availablePluginVersion = $objToolkit->getAvailableVersion($sanitizedTargetPluginId);
+$pluginUpdateAvailable = version_compare($sanitizedInstalledPluginVersion, $availablePluginVersion, '<');
 // View vars
 $view->targetPluginId = intval($sanitizedTargetPluginId); // Ready for print
 $view->installedPluginVersion = esc_html($sanitizedInstalledPluginVersion); // Ready for print
 $view->nameOfTargetPluginId = esc_html($objToolkit->getItemName($sanitizedTargetPluginId));
+$view->availablePluginVersion = $availablePluginVersion;
 $view->pluginUpdateAvailable = $pluginUpdateAvailable;
-$view->availablePluginVersion = $objToolkit->getAvailableVersion($sanitizedTargetPluginId);
 $view->pluginUpdateDownloadUrl = $pluginUpdateAvailable ? $objToolkit->getDownloadUrlIfPurchased($sanitizedTargetPluginId) : '';
 
 // 4. Status of Purchased Theme ID
-$themeUpdateAvailable = $objToolkit->checkPurchasedItemUpdateAvailable($sanitizedTargetThemeId, $sanitizedInstalledThemeVersion);
+$availableThemeVersion = $objToolkit->getAvailableVersion($sanitizedTargetThemeId);
+$themeUpdateAvailable = version_compare($sanitizedInstalledThemeVersion, $availableThemeVersion, '<');
 // View vars
 $view->targetThemeId = intval($sanitizedTargetThemeId); // Ready for print
 $view->installedThemeVersion = esc_html($sanitizedInstalledThemeVersion); // Ready for print
 $view->nameOfTargetThemeId = esc_html($objToolkit->getItemName($sanitizedTargetThemeId));
+$view->availableThemeVersion = $availableThemeVersion;
 $view->themeUpdateAvailable = $themeUpdateAvailable;
-$view->availableThemeVersion = $objToolkit->getAvailableVersion($sanitizedTargetThemeId);
 $view->themeUpdateDownloadUrl = $themeUpdateAvailable ? $objToolkit->getDownloadUrlIfPurchased($sanitizedTargetThemeId) : '';
 
 // 5. Envato Item Id of Purchased Plugin
