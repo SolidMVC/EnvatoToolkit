@@ -288,18 +288,6 @@ class EnvatoAPIManager
         return $itemName;
     }
 
-    public function checkPurchasedItemUpdateAvailable($paramEnvatoItemId, $paramInstalledVersion)
-    {
-        $updateAvailable = FALSE;
-        $itemDetails = $this->getItemDetailsIfPurchased($paramEnvatoItemId);
-        if(isset($itemDetails['version']) && version_compare($paramInstalledVersion, $itemDetails['version'], '<'))
-        {
-            $updateAvailable = TRUE;
-        }
-
-        return $updateAvailable;
-    }
-
     public function getAvailableVersion($paramEnvatoItemId)
     {
         $itemDetails = $this->getItemDetailsIfPurchased($paramEnvatoItemId);

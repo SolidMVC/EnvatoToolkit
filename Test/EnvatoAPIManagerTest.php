@@ -10,32 +10,7 @@
  * @copyright KestutisIT
  * @license MIT License
  */
-
-// Enable or disable this test. If not testing at the moment - disable the test
-$testEnabled = TRUE;
-if(!$testEnabled)
-{
-    die('Test is disabled');
-}
-
-// Require Php 5.4 or newer
-if (version_compare(phpversion(), '5.4.0', '<'))
-{
-    die('Php 5.4 or newer is required. Please upgrade your Php version first.');
-}
-
-// Start a session
-// Note: Requires Php 5.4+
-if(session_status() !== PHP_SESSION_ACTIVE)
-{
-    session_start();
-}
-
-$wpBlogHeaderFilePath = '../';
-
-define('WP_USE_THEMES', FALSE); // This is a test class, so we don't need to load
-require_once($wpBlogHeaderFilePath.'wp-blog-header.php'); // Note: adapt to match your path
-require_once(ABSPATH . '/Libraries/EnvatoAPIManager.php');
+defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
 
 if(isset($_POST['envato_check']))
 {
@@ -157,21 +132,23 @@ if(isset($_POST['envato_check']))
 
 
     // 3. Status of Purchased Plugin ID
-    $pluginUpdateAvailable = $objToolkit->checkPurchasedItemUpdateAvailable($sanitizedTargetPluginId, $sanitizedInstalledPluginVersion);
+    $availablePluginVersion = $objToolkit->getAvailableVersion($sanitizedTargetPluginId);
+    $pluginUpdateAvailable = version_compare($sanitizedInstalledPluginVersion, $availablePluginVersion, '<');
     // View vars
     $targetPluginId = intval($sanitizedTargetPluginId); // Ready for print
     $installedPluginVersion = esc_html($sanitizedInstalledPluginVersion); // Ready for print
     $nameOfTargetPluginId = esc_html($objToolkit->getItemName($sanitizedTargetPluginId));
-    $availablePluginVersion = $objToolkit->getAvailableVersion($sanitizedTargetPluginId);
+    // It will return the download link only if the update is available, and it is not yet exceeded downloads limit
     $pluginUpdateDownloadUrl = $pluginUpdateAvailable ? $objToolkit->getDownloadUrlIfPurchased($sanitizedTargetPluginId) : '';
 
     // 4. Status of Purchased Theme ID
-    $themeUpdateAvailable = $objToolkit->checkPurchasedItemUpdateAvailable($sanitizedTargetThemeId, $sanitizedInstalledThemeVersion);
+    $availableThemeVersion = $objToolkit->getAvailableVersion($sanitizedTargetThemeId);
+    $themeUpdateAvailable = version_compare($sanitizedInstalledThemeVersion, $availableThemeVersion, '<');
     // View vars
     $targetThemeId = intval($sanitizedTargetThemeId); // Ready for print
     $installedThemeVersion = esc_html($sanitizedInstalledThemeVersion); // Ready for print
     $nameOfTargetThemeId = esc_html($objToolkit->getItemName($sanitizedTargetThemeId));
-    $availableThemeVersion = $objToolkit->getAvailableVersion($sanitizedTargetThemeId);
+    // It will return the download link only if the update is available, and it is not yet exceeded downloads limit
     $themeUpdateDownloadUrl = $themeUpdateAvailable ? $objToolkit->getDownloadUrlIfPurchased($sanitizedTargetThemeId) : '';
 
     // 5. Envato Item Id of Purchased Plugin
@@ -184,7 +161,7 @@ if(isset($_POST['envato_check']))
     $targetThemeAuthor = esc_html($sanitizedTargetThemeAuthor); // Ready for print
     $foundThemeId = $objToolkit->getItemIdByThemeAndAuthorIfPurchased($sanitizedTargetThemeName, $sanitizedTargetThemeAuthor);
 
-    $goBackUrl = pathinfo(__FILE__, PATHINFO_FILENAME).'.php';
+    $goBackUrl = 'index.php';
     require('template.TestResults.php');
 } else
 {

@@ -135,7 +135,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
                 <li>Plugin Update Available: <?php print($pluginUpdateAvailable ? 'Yes' : 'No'); ?></li>
                 <li>Installed Plugin Version: <?php print($installedPluginVersion); ?></li>
                 <li>Available Plugin Version: <?php print($availablePluginVersion); ?></li>
-                <?php if($pluginUpdateAvailable): ?>
+                <?php if($pluginUpdateDownloadUrl != ''): ?>
                     <li>Plugin Update Download URL:
                         <a href="<?php print($pluginUpdateDownloadUrl); ?>" target="_blank" title="Download newest version">Download newest version</a>
                     </li>
@@ -152,7 +152,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
                 <li>Theme Update Available: <?php print($themeUpdateAvailable ? 'Yes' : 'No'); ?></li>
                 <li>Installed Theme Version: <?php print($installedThemeVersion); ?></li>
                 <li>Available Theme Version: <?php print($availableThemeVersion); ?></li>
-                <?php if($themeUpdateAvailable): ?>
+                <?php if($themeUpdateDownloadUrl != ''): ?>
                     <li>Theme Update Download URL:
                         <a href="<?php print($themeUpdateDownloadUrl); ?>" target="_blank" title="Download newest version">Download newest version</a>
                     </li>

@@ -5,7 +5,7 @@ Website link: https://profiles.wordpress.org/KestutisIT
 Tags: Envato Toolkit, Purchase code validation, update checker, Envato API
 Requires at least: 4.6
 Tested up to: 4.8
-Stable tag: 1.0
+Stable tag: 1.1
 License: MIT License
 License URI: https://opensource.org/licenses/MIT
 
