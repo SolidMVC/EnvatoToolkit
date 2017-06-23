@@ -352,11 +352,10 @@ $view->foundThemeId = $objToolkit->getItemIdByThemeAndAuthorIfPurchased($sanitiz
 
 This section describes how to install the plugin and get it working.
 
-1. Upload `EnvatoToolkit` to the `/wp-content/plugins/` directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Go to admin menu item `EnvatoToolkit` and enter your Envato Username,
+1. Put the  `Test` and `Libraries` folders to your WordPress install directory.
+2. Go to http://yoursite.com/Test/index.php and enter your Envato Username,
 Envato API Key and Envato Private Token.
-4. That's it.
+3. That's it.
 
 
 ## Frequently Asked Questions ##
