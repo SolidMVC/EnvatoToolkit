@@ -285,7 +285,7 @@ class EnvatoMarketAPI
         if($validItemId > 0)
         {
             // Download by item id
-            $url = 'https://api.envato.com/v3/market/buyer/download?item_id='.$validItemId.'&shorten_url=TRUE';
+            $url = 'https://api.envato.com/v3/market/buyer/download?item_id='.$validItemId.'&shorten_url=true';
         } else if($sanitizedPurchaseCode != '')
         {
             // Download by purchase code
