@@ -1,8 +1,12 @@
 <?php
 /**
  * Envato Market API class
- * @note - Keep in mind that the ApiKey here is different to the Personal Tokens
- *         The Api Key are generated in Envato Profile Settings
+ * @note1 - Keep in mind that the ApiKey here is different to the Personal Tokens
+ *          The Api Key are generated in Envato Profile Settings
+ * @note2 - The Envato API personal token can be generated at https://build.envato.com/create-token/
+ *          Keep in mind that this is a different thing than API
+ *          For documentation and instructions we can give this link to customers:
+ *          <a href="https://build.envato.com/create-token/?purchase:download=t&purchase:verify=t&purchase:list=t" target="_blank">generate a personal token</a>'
  * @package Envato Toolkit
  * @author KestutisIT
  * @copyright KestutisIT
@@ -12,23 +16,14 @@
 if(!class_exists('EnvatoMarketAPI')):
 class EnvatoMarketAPI
 {
-    //const API_AGENT = 'WordPress - Envato Market 1.0.0-RC2'; // Original Agent
-    const API_AGENT = 'EnvatoToolkit/1.0';
+    const VERSION = '1.2';
+    const API_AGENT = 'EnvatoToolkit/%s';
 
     protected $debugMode 	            = 0;
     protected $debugMessages            = array();
     protected $okayMessages             = array();
     protected $errorMessages            = array();
-
-    /**
-     * The Envato API personal token.
-     * It can be generated at https://build.envato.com/create-token/
-     * Keep in mind that this is a different thing than API
-     * For documentation and instructions we can give this link to customers:
-     * <a href="https://build.envato.com/create-token/?purchase:download=t&purchase:verify=t&purchase:list=t" target="_blank">generate a personal token</a>'
-     * @var string
-     */
-    protected $token;
+    protected $token                    = '';
 
     /**
      * EnvatoMarketAPI constructor.
@@ -45,7 +40,7 @@ class EnvatoMarketAPI
      */
     public function __clone()
     {
-        _doing_it_wrong( __FUNCTION__, esc_html__('Cheatin&#8217; huh?', 'envato-market-api'), '1.0');
+        _doing_it_wrong(__FUNCTION__, esc_html__('Cloning is not allowed.', 'envato-toolkit'), static::VERSION);
     }
 
     /**
@@ -54,7 +49,7 @@ class EnvatoMarketAPI
      */
     public function __wakeup()
     {
-        _doing_it_wrong( __FUNCTION__, esc_html__('Cheatin&#8217; huh?', 'envato-market-api'), '1.0');
+        _doing_it_wrong(__FUNCTION__, esc_html__('Wake-up is not allowed.', 'envato-toolkit'), static::VERSION);
     }
 
     public function inDebug()
@@ -85,14 +80,29 @@ class EnvatoMarketAPI
     }
 
     /**
+     * Remove all non unicode characters in a string
+     * @param string $paramText The string to fix.
+     * @return string
+     */
+    static private function removeNonUnicode($paramText)
+    {
+        $cleanText = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $paramText);
+
+        return $cleanText;
+    }
+
+    /**
      * Query the Envato API.
      * @uses wp_remote_get() To perform an HTTP request.
      * @param  string $paramApiRequestURL API request URL, including the request method, parameters, & file type.
      * @param  array  $paramArgs The arguments passed to `wp_remote_get`.
-     * @return array|\WP_Error  The HTTP response.
+     * @return array The HTTP response.
      */
     public function request($paramApiRequestURL, $paramArgs = array())
     {
+        $ok = TRUE;
+        $retArray = array();
+
         if($this->debugMode)
         {
             $debugMessage = '(Market API Hit) Request Url: '.esc_url_raw($paramApiRequestURL);
@@ -103,40 +113,79 @@ class EnvatoMarketAPI
         $defaults = array(
             'headers' => array(
                 'Authorization' => 'Bearer '.$this->token,
-                'User-Agent' => static::API_AGENT,
+                'User-Agent' => sprintf(static::API_AGENT, static::VERSION),
             ),
             'timeout' => 20,
         );
         $paramArgs = wp_parse_args($paramArgs, $defaults);
-
         $token = trim(str_replace('Bearer', '', $paramArgs['headers']['Authorization']));
-        if(empty( $token))
+
+        if($paramApiRequestURL == '')
         {
-            return new \WP_Error('api_token_error', __( 'An API token is required.', 'envato-market-api'));
+            // Request url is empty
+            $ok = FALSE;
+        } else if($token == '')
+        {
+            // Token is empty
+            $ok = FALSE;
+            $this->errorMessages[] = __( 'An API token is empty', 'envato-toolkit');
         }
 
-        // Make an API request.
-        $response = wp_remote_get(esc_url_raw($paramApiRequestURL), $paramArgs);
-
-        // Check the response code.
-        $response_code    = wp_remote_retrieve_response_code($response);
-        $response_message = wp_remote_retrieve_response_message($response);
-
-        if(200 !== $response_code && ! empty( $response_message))
+        $arrDecodedResponseBody = NULL;
+        $responseCode = 0;
+        if($ok)
         {
-            return new \WP_Error($response_code, $response_message);
-        } elseif(200 !== $response_code )
+            // Make an API request.
+            $response = wp_remote_get(esc_url_raw($paramApiRequestURL), $paramArgs);
+
+            // Check the response code.
+            $responseCode    = wp_remote_retrieve_response_code($response);
+            $responseMessage = wp_remote_retrieve_response_message($response);
+
+            if($responseCode === 200)
+            {
+                $arrDecodedResponseBody = json_decode(wp_remote_retrieve_body($response), TRUE);
+            } else
+            {
+                if(!empty($responseMessage))
+                {
+                    $ok = FALSE;
+                    $this->errorMessages[] = sprintf(__('Error: %s - %s', 'envato-toolkit'), intval($responseCode), sanitize_text_field($responseMessage));
+                } else
+                {
+                    $ok = FALSE;
+                    $this->errorMessages[] = sprintf(__('Error: %s - unknown API error', 'envato-toolkit'), intval($responseCode));
+                }
+            }
+        }
+
+        if($ok && $arrDecodedResponseBody === NULL)
         {
-            return new \WP_Error($response_code, __('An unknown API error occurred.', 'envato-market-api'));
+            $ok = FALSE;
+            $this->errorMessages[] = __('Error: NULL - unknown API error', 'envato-toolkit');
+        }
+
+        if($ok && isset($arrDecodedResponseBody['error']) && $arrDecodedResponseBody['error'] != '')
+        {
+            $ok = FALSE;
+            $validResponseCode = intval($responseCode);
+            $sanitizedResponseBodyError = sanitize_text_field(print_r($arrDecodedResponseBody['error'], TRUE));
+            $this->errorMessages[] = sprintf(__('Error: %s - %s (taken from response body \'error\' key)', 'envato-toolkit'), $validResponseCode, $sanitizedResponseBodyError);
+        } else if($ok && empty($arrDecodedResponseBody))
+        {
+            $ok = FALSE;
+            $this->errorMessages[] = sprintf(__('Error: %s - Empty response body', 'envato-toolkit'), intval($responseCode));
+        }
+
+        if($ok)
+        {
+            $retArray = $arrDecodedResponseBody;
         } else
         {
-            $return = json_decode(wp_remote_retrieve_body($response), TRUE);
-            if(null === $return )
-            {
-                return new \WP_Error('api_error', __('An unknown API error occurred.', 'envato-market-api'));
-            }
-            return $return;
+            $this->errorMessages[] = sprintf(__('Failed URL: %s', 'envato-toolkit'), esc_url_raw($paramApiRequestURL));
         }
+
+        return $retArray;
     }
 
     /**
@@ -152,18 +201,9 @@ class EnvatoMarketAPI
         $sanitizedUsername = sanitize_text_field($paramUsername);
         $url = 'https://api.envato.com/v1/market/user:'.$sanitizedUsername.'.json';
         $response = $this->request($url, $paramArgs);
+        $normalizedUser = $this->normalizeUser(isset($response['user']) ? $response['user'] : array());
 
-        if(is_wp_error($response) || empty($response))
-        {
-            return FALSE;
-        }
-
-        if(!empty($response['user']))
-        {
-            return $this->normalizeUser($response['user']);
-        }
-
-        return FALSE;
+        return $normalizedUser;
     }
 
     /**
@@ -179,13 +219,9 @@ class EnvatoMarketAPI
         $validItemId = !is_array($paramItemId) ? intval($paramItemId) : 0;
         $url = 'https://api.envato.com/v3/market/catalog/item?id='.$validItemId;
         $response = $this->request($url, $paramArgs);
+        $normalizedItem = $this->normalizeItem($response);
 
-        if(is_wp_error($response) || empty($response))
-        {
-            return FALSE;
-        }
-
-        return $this->normalizeItem($response);
+        return $normalizedItem;
     }
 
     /**
@@ -206,23 +242,21 @@ class EnvatoMarketAPI
         $url = 'https://api.envato.com/v3/market/buyer/list-purchases?filter_by='.$validFilterBy;
         $response = $this->request($url, $paramArgs);
 
-        if(is_wp_error($response) || empty($response) || empty($response['results']))
+        if(isset($response['results']))
         {
-            return $items;
-        }
-
-        foreach($response['results'] AS $item)
-        {
-            $itemId = isset($item['item']['id']) ? intval($item['item']['id']) : 0;
-            $validPurchaseCode = isset($item['code']) && !is_array($item['code']) ? preg_replace('[^-_0-9a-zA-Z]', '', $item['code']) : '';
-
-            if($itemId > 0)
+            foreach($response['results'] AS $item)
             {
-                $items[$itemId] = $this->normalizeItem($item['item']);
-            }
-            if($validPurchaseCode != "")
-            {
-                $purchases[$validPurchaseCode] = $this->normalizeLicense($item, $paramBuyerUsername);
+                $itemId = isset($item['item']['id']) ? intval($item['item']['id']) : 0;
+                $validPurchaseCode = isset($item['code']) && !is_array($item['code']) ? preg_replace('[^-_0-9a-zA-Z]', '', $item['code']) : '';
+
+                if($itemId > 0)
+                {
+                    $items[$itemId] = $this->normalizeItem($item['item']);
+                }
+                if($validPurchaseCode != "")
+                {
+                    $purchases[$validPurchaseCode] = $this->normalizeLicense($item, $paramBuyerUsername);
+                }
             }
         }
 
@@ -243,12 +277,9 @@ class EnvatoMarketAPI
      */
     public function getDownload($paramItemId = 0, $paramPurchaseCode = '', $paramArgs = array())
     {
+        $downloadURL = '';
         $validItemId = !is_array($paramItemId) ? intval($paramItemId) : 0;
         $sanitizedPurchaseCode = sanitize_text_field($paramPurchaseCode);
-        if($validItemId <= 0 && $sanitizedPurchaseCode == '')
-        {
-            return FALSE;
-        }
 
         $url = '';
         if($validItemId > 0)
@@ -274,6 +305,14 @@ class EnvatoMarketAPI
         //      "wordpress_theme": "https://themeforest.net/short-dl?hash=100e3000-1111-2222-3333-8abc20007000"
         // }
 
+        if(!empty($response['wordpress_plugin']))
+        {
+            $downloadURL = $response['wordpress_plugin'];
+        } elseif(!empty($response['wordpress_theme']))
+        {
+            $downloadURL = $response['wordpress_theme'];
+        }
+
         if($this->debugMode)
         {
             // We use this debug to track better the reach of daily download limit (which is 20)
@@ -282,23 +321,7 @@ class EnvatoMarketAPI
             $this->debugMessages[] = $debugMessage;
         }
 
-        if(is_wp_error($response) || empty($response) || !empty($response['error']))
-        {
-            return FALSE;
-        }
-
-        if(!empty($response['wordpress_plugin']))
-        {
-            return $response['wordpress_plugin'];
-        }
-
-        if(!empty($response['wordpress_theme']))
-        {
-            return $response['wordpress_theme'];
-        }
-
-
-        return FALSE;
+        return $downloadURL;
     }
 
     /**
@@ -366,20 +389,23 @@ class EnvatoMarketAPI
         $versions = array();
 
         // Set the required and tested WordPress version numbers.
-        foreach($paramItem['attributes'] AS $key => $value)
+        if(isset($paramItem['attributes']))
         {
-            if('compatible-software' === $value['name'])
+            foreach($paramItem['attributes'] AS $key => $value)
             {
-                foreach($value['value'] AS $version)
+                if('compatible-software' === $value['name'])
                 {
-                    $versions[] = str_replace('WordPress ', '', trim($version));
+                    foreach($value['value'] AS $version)
+                    {
+                        $versions[] = str_replace('WordPress ', '', trim($version));
+                    }
+                    if(!empty($versions))
+                    {
+                        $requiredWPVersion = $versions[count($versions)-1];
+                        $testedWPVersion = $versions[0];
+                    }
+                    break;
                 }
-                if(!empty($versions))
-                {
-                    $requiredWPVersion = $versions[count($versions)-1];
-                    $testedWPVersion = $versions[0];
-                }
-                break;
             }
         }
 
@@ -451,21 +477,6 @@ class EnvatoMarketAPI
         }
 
         return $arrNormalizedItem;
-    }
-
-    /**
-     * Remove all non unicode characters in a string
-     *
-     * @since 1.0
-     *
-     * @param string $paramText The string to fix.
-     * @return string
-     */
-    static private function removeNonUnicode($paramText)
-    {
-        $cleanText = preg_replace( '/[\x00-\x1F\x80-\xFF]/', '', $paramText);
-
-        return $cleanText;
     }
 }
 endif;

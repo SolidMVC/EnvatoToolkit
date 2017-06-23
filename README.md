@@ -10,7 +10,7 @@
 
 **Tested up to:** 4.8
 
-**Stable tag:** 1.1
+**Stable tag:** Trunk
 
 **License:** MIT License
 
@@ -370,6 +370,9 @@ So there is no need to save your head revision number or last version on your se
 
 ## Changelog ##
 
+### 1.2 ###
+* Added support for the situations if Envato API is down, plus added detailed error message handler.
+
 ### 1.1 ###
 * Removed 1 redundant API class method that should be handled by the controller, not a model. Plus, for security reasons, changelog.txt is no more in the plugin folder (so that there would be no way to discover the actual plugin version by public.
 
@@ -378,6 +381,9 @@ So there is no need to save your head revision number or last version on your se
 
 
 ## Upgrade Notice ##
+
+### 1.2 ###
+* Just drag and drop new plugin folder.
 
 ### 1.1 ###
 * Just drag and drop new plugin folder.

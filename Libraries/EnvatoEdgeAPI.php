@@ -12,8 +12,8 @@
 if(!class_exists('EnvatoEdgeAPI')):
 class EnvatoEdgeAPI
 {
-    //const API_AGENT = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)'; // Original
-    const API_AGENT = 'EnvatoToolkit/1.0';
+    const VERSION = '1.2';
+    const API_AGENT = 'EnvatoToolkit/%s';
 
     protected $debugMode 	            = 0;
     protected $debugMessages            = array();
@@ -34,7 +34,7 @@ class EnvatoEdgeAPI
      */
     public function __clone()
     {
-        _doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'envato-edge-api' ), '1.0.0' );
+        _doing_it_wrong(__FUNCTION__, esc_html__('Cloning is not allowed.', 'envato-toolkit'), static::VERSION);
     }
 
     /**
@@ -43,7 +43,7 @@ class EnvatoEdgeAPI
      */
     public function __wakeup()
     {
-        _doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'envato-edge-api' ), '1.0.0' );
+        _doing_it_wrong(__FUNCTION__, esc_html__('Wake-up is not allowed.', 'envato-toolkit'), static::VERSION);
     }
 
     public function inDebug()
@@ -93,7 +93,7 @@ class EnvatoEdgeAPI
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         // Set the user agent
-        curl_setopt($ch, CURLOPT_USERAGENT, static::API_AGENT);
+        curl_setopt($ch, CURLOPT_USERAGENT, sprintf(static::API_AGENT, static::VERSION));
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // wait for connection in seconds
         curl_setopt($ch, CURLOPT_TIMEOUT, 20); // timeout in seconds
         // Decode returned JSON
@@ -124,6 +124,10 @@ class EnvatoEdgeAPI
         if(isset($output['verify-purchase']) && sizeof($output['verify-purchase']) > 0)
         {
             $licenseDetails = $this->normalizeLicense($output['verify-purchase'], $sanitizedPurchaseCode);
+        } else
+        {
+            $this->errorMessages[] = sprintf(__('\'verify-purchase\' key is empty or not exist', 'envato-toolkit'), esc_url_raw($url));
+            $this->errorMessages[] = sprintf(__('Failed URL: %s', 'envato-toolkit'), esc_url_raw($url));
         }
 
         return $licenseDetails;

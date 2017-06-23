@@ -4,14 +4,14 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
 <head>
     <title>Envato Toolkit Library - Test Results</title>
     <style type="text/css">
-        body {
+        .envato-toolkit-wrapper {
             text-align: center;
             width: 100%;
         }
-        h1 {
+        .envato-toolkit-wrapper h1 {
             margin: 20px;
         }
-        div.content {
+        .envato-toolkit-wrapper div.content {
             text-align: center;
             margin: 0 auto;
             max-width: 840px;
@@ -19,6 +19,26 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
         .clear {
             display:block;
             clear:both;
+        }
+        .info-message {
+            margin: 20px;
+            border-radius: 5px 5px 5px 5px;
+            border: 1px solid black;
+            line-height: 31px;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 7px;
+            padding-bottom: 9px;
+            background-color: #424B58;
+            font-weight: normal;
+            font-size: 20px;
+            color: white;
+        }
+        .error-message {
+            color: red;
+        }
+        .okay-message {
+
         }
         .results-box {
             text-align: left;
@@ -46,15 +66,20 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
         .results-box .action-buttons button:hover {
             background-color: #8ab16f;
         }
-        div.action-buttons {
+        .results-box div.action-buttons {
             text-align: center;
             margin-top: 50px;
         }
     </style>
 </head>
-<body>
+<body class="envato-toolkit-wrapper">
 <h1>Envato Toolkit - Test Results</h1>
 <div class="content">
+    <?php if ($errorMessage != ""): ?>
+        <div class="info-message error-message"><?php print($errorMessage); ?></div>
+    <?php elseif ($okayMessage != ""): ?>
+        <div class="info-message okay-message"><?php print($okayMessage); ?></div>
+    <?php endif; ?>
     <div class="results-box">
         <h2>Details about you</h2>
         <p>

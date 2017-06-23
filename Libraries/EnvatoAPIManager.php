@@ -15,9 +15,8 @@ if(!class_exists('EnvatoAPIManager')):
 class EnvatoAPIManager
 {
     protected $debugMode 	            = 0;
-    protected $debugMessages            = array();
-    protected $okayMessages             = array();
-    protected $errorMessages            = array();
+    protected $savedOkayMessages        = array();
+    protected $savedErrorMessages       = array();
     protected $username                 = '';
     protected $apiKey                   = '';
     protected $personalToken            = '';
@@ -42,26 +41,14 @@ class EnvatoAPIManager
         return ($this->debugMode >= 1 ? TRUE : FALSE);
     }
 
-    public function flushMessages()
+    public function getSavedOkayMessages()
     {
-        $this->debugMessages = array();
-        $this->okayMessages = array();
-        $this->errorMessages = array();
+        return $this->savedOkayMessages;
     }
 
-    public function getDebugMessages()
+    public function getSavedErrorMessages()
     {
-        return $this->debugMessages;
-    }
-
-    public function getOkayMessages()
-    {
-        return $this->okayMessages;
-    }
-
-    public function getErrorMessages()
-    {
-        return $this->errorMessages;
+        return $this->savedErrorMessages;
     }
 
 
@@ -96,16 +83,6 @@ class EnvatoAPIManager
 
     /**
      * @uses EnvatoEdgeAPI
-     * @param $paramPurchaseCode
-     * @return bool
-     */
-    public function isValidLicense($paramPurchaseCode)
-    {
-        return $this->getLicenseDetails($paramPurchaseCode) !== FALSE ? TRUE : FALSE;
-    }
-
-    /**
-     * @uses EnvatoEdgeAPI
      * @param string $paramPurchaseCode
      * @return array|FALSE
      */
@@ -121,14 +98,18 @@ class EnvatoAPIManager
         } else if($validPurchaseCode != '' && !isset($this->cachedLicenses[$validPurchaseCode]))
         {
             // Call Edge API - this is a quicker path, and does not require personal token
-            $objAPI = new EnvatoEdgeAPI($this->username, $this->apiKey);
-            $licenseDetails = $objAPI->getLicenseDetails($paramPurchaseCode);
+            $objEnvatoAPI = new EnvatoEdgeAPI($this->username, $this->apiKey);
+            $licenseDetails = $objEnvatoAPI->getLicenseDetails($paramPurchaseCode);
 
             if($licenseDetails != FALSE)
             {
                 // Add to cache, but only if it is not there yet
                 $this->cachedLicenses[$validPurchaseCode] = $licenseDetails;
             }
+
+            // Save okay/error messages
+            $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
+            $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         }
 
         return $licenseDetails;
@@ -142,6 +123,7 @@ class EnvatoAPIManager
     /**
      * Get any Envato user details
      * @note Username here, of course, can be different from
+     * @uses EnvatoMarketAPI
      * @param $paramUsername
      * @return array|false
      */
@@ -161,27 +143,13 @@ class EnvatoAPIManager
 
             // Get user details for specified username
             $userDetails = $objEnvatoAPI->getUser($validUsername);
+
+            // Save okay/error messages
+            $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
+            $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         }
 
         return $userDetails;
-    }
-
-    public function getLicensesByItemId($paramEnvatoItemId)
-    {
-        // Load license codes
-        $this->getPurchasedItemsWithDetails('wordpress-plugins');
-        $this->getPurchasedItemsWithDetails('wordpress-themes');
-
-        $licenses = array();
-        foreach($this->cachedLicenses AS $purchaseCode => $licenseDetails)
-        {
-            if(isset($licenseDetails['envato_item_id']) && $licenseDetails['envato_item_id'] == $paramEnvatoItemId)
-            {
-                $licenses[] = $licenseDetails;
-            }
-        }
-
-        return $licenses;
     }
 
     public function getPurchasedPluginsWithDetails()
@@ -196,6 +164,7 @@ class EnvatoAPIManager
 
     /**
      * Get the list of plugins or themes for specified personal token, that were purchased in Envato Store
+     * @uses EnvatoMarketAPI
      * @param $paramFilterBy - 'wordpress-plugins' or 'wordpress-themes'
      * @return array
      */
@@ -214,10 +183,11 @@ class EnvatoAPIManager
             // Get all purchased plugins of this customer by his token
             // NOTE: Username parameter here is optional, we use it only to match the output with Edge API
             $itemsAndTheirPurchases = $objEnvatoAPI->getItemsAndTheirPurchases($paramFilterBy, $this->username);
-            $purchasedItemsWithDetails = $itemsAndTheirPurchases['items'];
+            $purchasedItemsWithDetails = isset($itemsAndTheirPurchases['items']) ? $itemsAndTheirPurchases['items'] : array();
+            $purchases = isset($itemsAndTheirPurchases['purchases']) ? $itemsAndTheirPurchases['purchases'] : array();
 
             // Add to items cache if needed
-            foreach($itemsAndTheirPurchases['items'] AS $envatoItemId => $itemDetails)
+            foreach($purchasedItemsWithDetails AS $envatoItemId => $itemDetails)
             {
                 if(!isset($this->cachedItems[$envatoItemId]))
                 {
@@ -227,7 +197,7 @@ class EnvatoAPIManager
             }
 
             // Add to licenses cache if needed
-            foreach($itemsAndTheirPurchases['purchases'] AS $purchaseCode => $licenseDetails)
+            foreach($purchases AS $purchaseCode => $licenseDetails)
             {
                 if(!isset($this->cachedLicenses[$purchaseCode]))
                 {
@@ -235,6 +205,10 @@ class EnvatoAPIManager
                     $this->cachedLicenses[$purchaseCode] = $licenseDetails;
                 }
             }
+
+            // Save okay/error messages
+            $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
+            $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         } else
         {
             // Load from cache
@@ -256,6 +230,7 @@ class EnvatoAPIManager
     /**
      * Get details of single Envato item for specified personal token.
      * @note returns item details only if it was purchased (that can be either theme or a plugin)
+     * @uses EnvatoMarketAPI
      * @param int $paramEnvatoItemId
      * @return array|FALSE
      */
@@ -277,9 +252,56 @@ class EnvatoAPIManager
 
             // Add item to cache
             $this->cachedItems[$validEnvatoItemId] = $itemDetails;
+
+            // Save okay/error messages
+            $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
+            $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         }
 
         return $itemDetails;
+    }
+
+    /**
+     * @uses EnvatoMarketAPI
+     * @param $paramEnvatoItemId        - required, unless the purchase code is provided
+     * @param string $paramPurchaseCode - usually we don't need that,  but in case if somebody will need
+     *                                    to download this way, we keep this parameter here
+     * @return string
+     */
+    public function getDownloadUrlIfPurchased($paramEnvatoItemId = 0, $paramPurchaseCode = '')
+    {
+        $downloadURL = '';
+        $validEnvatoItemId = !is_array($paramEnvatoItemId) ? intval($paramEnvatoItemId) : 0;
+
+        if($validEnvatoItemId > 0 && isset($this->cachedDownloadURLs[$validEnvatoItemId]))
+        {
+            // Take download url from cache
+            $downloadURL = $this->cachedDownloadURLs[$validEnvatoItemId];
+        } else if($this->personalToken != '' && ($validEnvatoItemId > 0 || $paramPurchaseCode != ''))
+        {
+            // Call Market API
+            $objEnvatoAPI = new EnvatoMarketAPI($this->personalToken);
+
+            $downloadURL = $objEnvatoAPI->getDownload($validEnvatoItemId, $paramPurchaseCode);
+
+            // Add to cache
+            $this->cachedDownloadURLs[$validEnvatoItemId] = $downloadURL;
+
+            // Save okay/error messages
+            $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
+            $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
+        }
+
+        return $downloadURL;
+    }
+
+    /* -------------------------------------------------------------------------------------- */
+    /* Extended methods                                                                       */
+    /* -------------------------------------------------------------------------------------- */
+
+    public function isValidLicense($paramPurchaseCode)
+    {
+        return $this->getLicenseDetails($paramPurchaseCode) !== FALSE ? TRUE : FALSE;
     }
 
     public function getItemName($paramEnvatoItemId)
@@ -329,39 +351,28 @@ class EnvatoAPIManager
         return $purchaseIsTheme;
     }
 
-    /**
-     * @param $paramEnvatoItemId        - required, unless the purchase code is provided
-     * @param string $paramPurchaseCode - usually we don't need that,  but in case if somebody will need
-     *                                    to download this way, we keep this parameter here
-     * @return string
-     */
-    public function getDownloadUrlIfPurchased($paramEnvatoItemId = 0, $paramPurchaseCode = '')
-    {
-        $downloadURL = '';
-        $validEnvatoItemId = !is_array($paramEnvatoItemId) ? intval($paramEnvatoItemId) : 0;
-
-        if($validEnvatoItemId > 0 && isset($this->cachedDownloadURLs[$validEnvatoItemId]))
-        {
-            // Take download url from cache
-            $downloadURL = $this->cachedDownloadURLs[$validEnvatoItemId];
-        } else if($this->personalToken != '' && ($validEnvatoItemId > 0 || $paramPurchaseCode != ''))
-        {
-            // Call Market API
-            $objEnvatoAPI = new EnvatoMarketAPI($this->personalToken);
-
-            $downloadURL = $objEnvatoAPI->getDownload($validEnvatoItemId, $paramPurchaseCode);
-
-            // Add to cache
-            $this->cachedDownloadURLs[$validEnvatoItemId] = $downloadURL;
-        }
-
-        return $downloadURL;
-    }
-
 
     /* -------------------------------------------------------------------------------------- */
     /* Search methods                                                                         */
     /* -------------------------------------------------------------------------------------- */
+
+    public function getLicensesByItemId($paramEnvatoItemId)
+    {
+        // Load license codes
+        $this->getPurchasedItemsWithDetails('wordpress-plugins');
+        $this->getPurchasedItemsWithDetails('wordpress-themes');
+
+        $licenses = array();
+        foreach($this->cachedLicenses AS $purchaseCode => $licenseDetails)
+        {
+            if(isset($licenseDetails['envato_item_id']) && $licenseDetails['envato_item_id'] == $paramEnvatoItemId)
+            {
+                $licenses[] = $licenseDetails;
+            }
+        }
+
+        return $licenses;
+    }
 
     /**
      * Get item id by plugin name and plugin author, but only if that plugin was purchased (based on personal token)
@@ -375,10 +386,10 @@ class EnvatoAPIManager
         $purchasedPlugins = $this->getPurchasedItemsWithDetails('wordpress-plugins');
         foreach($purchasedPlugins AS $purchasedPlugin)
         {
-            if ($this->normalize($purchasedPlugin['name']) === $this->normalize($paramPluginName) &&
-                $this->normalize($purchasedPlugin['author']) === $this->normalize($paramPluginAuthor)
+            if (isset($purchasedPlugin['name']) && $this->normalize($purchasedPlugin['name']) === $this->normalize($paramPluginName) &&
+                isset($purchasedPlugin['author']) && $this->normalize($purchasedPlugin['author']) === $this->normalize($paramPluginAuthor)
             ) {
-                $envatoItemId = $purchasedPlugin['envato_item_id'];
+                $envatoItemId = isset($purchasedPlugin['envato_item_id']) ? $purchasedPlugin['envato_item_id'] : 0;
             }
         }
 
@@ -395,12 +406,12 @@ class EnvatoAPIManager
     {
         $envatoItemId = 0;
         $purchasedThemes = $this->getPurchasedItemsWithDetails('wordpress-themes');
-        foreach($purchasedThemes AS $purchaseTheme)
+        foreach($purchasedThemes AS $purchasedTheme)
         {
-            if ($this->normalize($purchaseTheme['name']) === $this->normalize($paramThemeName) &&
-                $this->normalize($purchaseTheme['author']) === $this->normalize($paramThemeAuthor)
+            if (isset($purchasedTheme['name']) && $this->normalize($purchasedTheme['name']) === $this->normalize($paramThemeName) &&
+                isset($purchasedTheme['author']) && $this->normalize($purchasedTheme['author']) === $this->normalize($paramThemeAuthor)
             ) {
-                $envatoItemId = $purchaseTheme['envato_item_id'];
+                $envatoItemId = isset($purchasedTheme['envato_item_id']) ? $purchasedTheme['envato_item_id']: 0;
             }
         }
 

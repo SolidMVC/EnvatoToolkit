@@ -4,21 +4,21 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
 <head>
     <title>Envato Toolkit Library - Test Input</title>
     <style type="text/css">
-        body {
+        .envato-toolkit-wrapper {
             text-align: center;
             width: 100%;
         }
-        h1 {
+        .envato-toolkit-wrapper h1 {
             margin: 20px;
+        }
+        .envato-toolkit-wrapper div.content {
+            text-align: center;
+            margin: 0 auto;
+            max-width: 840px;
         }
         .clear {
             display:block;
             clear:both;
-        }
-        div.content {
-            text-align: center;
-            margin: 0 auto;
-            max-width: 840px;
         }
         .envato-form {
             text-align: left;
@@ -59,7 +59,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
         }
     </style>
 </head>
-<body>
+<body class="envato-toolkit-wrapper">
 <h1>Envato Toolkit - Test Input</h1>
 <div class="content">
 <form name="envato_form" action="" method="POST" class="envato-form">
