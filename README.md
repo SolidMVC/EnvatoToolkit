@@ -40,7 +40,7 @@ and how you should not to code.
 For example - you would like to give an error message, if Envato user token is empty,
 which is a required string, i.e. - `pAA0aBCdeFGhiJKlmNOpqRStuVWxyZ44`.
 If you like K.I.S.S., PSR-2, D.R.Y., clean code coding standards and paradigms,
-you'd probably just have these four lines of code, so that every developer would get it:
+you'd probably just have these five lines of code, so that every developer would get it:
 
 ```
 $token = get_user_meta(get_current_user_id(), 'envato_token', TRUE);
