@@ -15,6 +15,7 @@ if(!class_exists('EnvatoAPIManager')):
 class EnvatoAPIManager
 {
     protected $debugMode 	            = 0;
+    protected $savedDebugMessages       = array();
     protected $savedOkayMessages        = array();
     protected $savedErrorMessages       = array();
     protected $username                 = '';
@@ -39,6 +40,11 @@ class EnvatoAPIManager
     public function inDebug()
     {
         return ($this->debugMode >= 1 ? TRUE : FALSE);
+    }
+
+    public function getSavedDebugMessages()
+    {
+        return $this->savedDebugMessages;
     }
 
     public function getSavedOkayMessages()
@@ -108,6 +114,7 @@ class EnvatoAPIManager
             }
 
             // Save okay/error messages
+            $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
             $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
             $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         }
@@ -145,6 +152,7 @@ class EnvatoAPIManager
             $userDetails = $objEnvatoAPI->getUser($validUsername);
 
             // Save okay/error messages
+            $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
             $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
             $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         }
@@ -207,6 +215,7 @@ class EnvatoAPIManager
             }
 
             // Save okay/error messages
+            $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
             $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
             $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         } else
@@ -254,6 +263,7 @@ class EnvatoAPIManager
             $this->cachedItems[$validEnvatoItemId] = $itemDetails;
 
             // Save okay/error messages
+            $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
             $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
             $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         }
@@ -288,6 +298,7 @@ class EnvatoAPIManager
             $this->cachedDownloadURLs[$validEnvatoItemId] = $downloadURL;
 
             // Save okay/error messages
+            $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
             $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
             $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         }
