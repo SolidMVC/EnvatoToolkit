@@ -10,7 +10,7 @@
 
 **Tested up to:** 4.8
 
-**Stable tag:** Trunk
+**Stable tag:** trunk
 
 **License:** MIT License
 
