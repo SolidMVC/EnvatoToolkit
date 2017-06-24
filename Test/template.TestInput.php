@@ -65,16 +65,16 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
 <form name="envato_form" action="" method="POST" class="envato-form">
     <h2>Enter Your Envato Details</h2>
     <p>
-        <label for="conf_envato_username">Your Envato Username:</label><br />
-        <input name="conf_envato_username" id="conf_envato_username" type="text" value="<?php print($envatoUsername); ?>"
+        <label for="envato_username">Your Envato Username:</label><br />
+        <input name="envato_username" id="envato_username" type="text" value="<?php print($envatoUsername); ?>"
                onfocus="if(this.value === 'YOUR_ENVATO_USERNAME') {this.value=''}"
                onblur="if(this.value === ''){this.value ='YOUR_ENVATO_USERNAME'}"
         /><br />
         <em>(Your username can be found in Envato User Menu -&gt; Profile, i.e. TheGreatUser)</em>
     </p>
     <p>
-        <label for="conf_envato_api_key">Your Envato API Key:</label><br />
-        <input name="conf_envato_api_key" id="conf_envato_api_key" type="text" value="<?php print($envatoAPIKey); ?>"
+        <label for="envato_api_key">Your Envato API Key:</label><br />
+        <input name="envato_api_key" id="envato_api_key" type="text" value="<?php print($envatoAPIKey); ?>"
                onfocus="if(this.value === 'YOUR_ENVATO_API_KEY') {this.value=''}"
                onblur="if(this.value === ''){this.value ='YOUR_ENVATO_API_KEY'}"
         /><br />
@@ -85,8 +85,8 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
             API Key Example - 0v11zxcv2000asdf3000ghjk4qwer000)</em>
     </p>
     <p>
-        <label for="conf_envato_personal_token">Your Envato Personal Token:</label><br />
-        <input name="conf_envato_personal_token" id="conf_envato_personal_token" type="text" value="<?php print($envatoPersonalToken); ?>"
+        <label for="envato_personal_token">Your Envato Personal Token:</label><br />
+        <input name="envato_personal_token" id="envato_personal_token" type="text" value="<?php print($envatoPersonalToken); ?>"
                onfocus="if(this.value === 'YOUR_ENVATO_PERSONAL_TOKEN') {this.value=''}"
                onblur="if(this.value === ''){this.value ='YOUR_ENVATO_PERSONAL_TOKEN'}"
         /><br />

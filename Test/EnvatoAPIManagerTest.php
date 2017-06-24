@@ -5,7 +5,7 @@
  * @note1 - This test works only if you have WordPress installed, and you can point to working WordPress install 'wp-blog-header.php' site
  * @note2 - When you develop something, you can put this test code to your current active theme's functions.php file
  *          or in some plugin Admin section hook callback class
- * @package EnvatoToolkit Test
+ * @package EnvatoToolkit
  * @author KestutisIT
  * @copyright KestutisIT
  * @license MIT License
@@ -15,9 +15,9 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
 if(isset($_POST['envato_check']))
 {
     // Toolkit settings
-    $sanitizedEnvatoUsername = isset($_POST['conf_envato_username']) ? sanitize_text_field($_POST['conf_envato_username']) : '';
-    $sanitizedEnvatoAPIKey = isset($_POST['conf_envato_api_key']) ? sanitize_text_field($_POST['conf_envato_api_key']) : '';
-    $sanitizedEnvatoPersonalToken = isset($_POST['conf_envato_personal_token']) ? sanitize_text_field($_POST['conf_envato_personal_token']) : '';
+    $sanitizedEnvatoUsername = isset($_POST['envato_username']) ? sanitize_text_field($_POST['envato_username']) : '';
+    $sanitizedEnvatoAPIKey = isset($_POST['envato_api_key']) ? sanitize_text_field($_POST['envato_api_key']) : '';
+    $sanitizedEnvatoPersonalToken = isset($_POST['envato_personal_token']) ? sanitize_text_field($_POST['envato_personal_token']) : '';
 
     // Methods params
     $sanitizedTargetPurchaseCode = isset($_POST['target_purchase_code']) ? sanitize_text_field($_POST['target_purchase_code']) : '';
@@ -32,9 +32,9 @@ if(isset($_POST['envato_check']))
     $sanitizedTargetThemeAuthor = isset($_POST['target_theme_author']) ? sanitize_text_field($_POST['target_theme_author']) : '';
 
     // Update $_SESSION
-    $_SESSION['conf_envato_username'] = $sanitizedEnvatoUsername;
-    $_SESSION['conf_envato_api_key'] = $sanitizedEnvatoAPIKey;
-    $_SESSION['conf_envato_personal_token'] = $sanitizedEnvatoPersonalToken;
+    $_SESSION['envato_username'] = $sanitizedEnvatoUsername;
+    $_SESSION['envato_api_key'] = $sanitizedEnvatoAPIKey;
+    $_SESSION['envato_personal_token'] = $sanitizedEnvatoPersonalToken;
 
     $_SESSION['target_purchase_code'] = $sanitizedTargetPurchaseCode;
     $_SESSION['target_username'] = $sanitizedTargetUsername;
@@ -48,9 +48,9 @@ if(isset($_POST['envato_check']))
     $_SESSION['target_theme_author'] = $sanitizedTargetThemeAuthor;
 
     $toolkitSettings = array(
-        'conf_envato_username' => $sanitizedEnvatoUsername,
-        'conf_envato_api_key' => $sanitizedEnvatoAPIKey,
-        'conf_envato_personal_token' => $sanitizedEnvatoPersonalToken,
+        'envato_username' => $sanitizedEnvatoUsername,
+        'envato_api_key' => $sanitizedEnvatoAPIKey,
+        'envato_personal_token' => $sanitizedEnvatoPersonalToken,
     );
 
     $objToolkit = new EnvatoAPIManager($toolkitSettings);
@@ -161,14 +161,21 @@ if(isset($_POST['envato_check']))
     $targetThemeAuthor = esc_html($sanitizedTargetThemeAuthor); // Ready for print
     $foundThemeId = $objToolkit->getItemIdByThemeAndAuthorIfPurchased($sanitizedTargetThemeName, $sanitizedTargetThemeAuthor);
 
+    // Get messages ready for print
+    $okayMessage = implode("<br />", array_map('esc_html', $objToolkit->getSavedOkayMessages()));
+    $errorMessage = implode("<br />", array_map('esc_html', $objToolkit->getSavedErrorMessages()));
+
+    // Back url
     $goBackUrl = 'index.php';
+
+    // Print the template
     require('template.TestResults.php');
 } else
 {
     // Your details
-    $envatoUsername = isset($_SESSION['conf_envato_username']) ? esc_attr(stripslashes($_SESSION['conf_envato_username'])) : '';
-    $envatoAPIKey = isset($_SESSION['conf_envato_api_key']) ? esc_attr(stripslashes($_SESSION['conf_envato_api_key'])) : '';
-    $envatoPersonalToken = isset($_SESSION['conf_envato_personal_token']) ? esc_attr(stripslashes($_SESSION['conf_envato_personal_token'])) : '';
+    $envatoUsername = isset($_SESSION['envato_username']) ? esc_attr(stripslashes($_SESSION['envato_username'])) : '';
+    $envatoAPIKey = isset($_SESSION['envato_api_key']) ? esc_attr(stripslashes($_SESSION['envato_api_key'])) : '';
+    $envatoPersonalToken = isset($_SESSION['envato_personal_token']) ? esc_attr(stripslashes($_SESSION['envato_personal_token'])) : '';
 
     // Check target purchase code
     $targetPurchaseCode = isset($_SESSION['target_purchase_code']) ? esc_attr(stripslashes($_SESSION['target_purchase_code'])) : '';
@@ -205,7 +212,7 @@ if(isset($_POST['envato_check']))
         $targetThemeAuthor = 'ThemeFusion';
     }
 
-    // Input Form
+    // Print the template
     require('template.TestInput.php');
 }
 

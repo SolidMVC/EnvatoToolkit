@@ -31,9 +31,9 @@ class EnvatoAPIManager
      */
     public function __construct(array $paramSettings)
     {
-        $this->username = isset($paramSettings['conf_envato_username']) ? sanitize_text_field($paramSettings['conf_envato_username']) : '';
-        $this->apiKey = isset($paramSettings['conf_envato_api_key']) ? sanitize_text_field($paramSettings['conf_envato_api_key']) : '';
-        $this->personalToken = isset($paramSettings['conf_envato_personal_token']) ? sanitize_text_field($paramSettings['conf_envato_personal_token']) : '';
+        $this->username = isset($paramSettings['envato_username']) ? sanitize_text_field($paramSettings['envato_username']) : '';
+        $this->apiKey = isset($paramSettings['envato_api_key']) ? sanitize_text_field($paramSettings['envato_api_key']) : '';
+        $this->personalToken = isset($paramSettings['envato_personal_token']) ? sanitize_text_field($paramSettings['envato_personal_token']) : '';
     }
 
     public function inDebug()
