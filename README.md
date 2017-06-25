@@ -363,7 +363,7 @@ Envato API Key and Envato Private Token.
 
 ### How does it work? ###
 
-This plugins uses both - Envato Edge API and Envato Market API to retrieve required data automatically, without any need of server-in-the-middle.
+This library uses both - Envato Edge API and Envato Market API to retrieve required data automatically, without any need of server-in-the-middle.
 So there is no need to save your head revision number or last version on your server, it will get that that automatically from Envato via it's API.
 
 
