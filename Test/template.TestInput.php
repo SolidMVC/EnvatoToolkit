@@ -66,7 +66,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
     <h2>Enter Your Envato Details</h2>
     <p>
         <label for="envato_username">Your Envato Username:</label><br />
-        <input name="envato_username" id="envato_username" type="text" value="<?php print($envatoUsername); ?>"
+        <input name="envato_username" id="envato_username" type="text" value="<?=$envatoUsername;?>"
                onfocus="if(this.value === 'YOUR_ENVATO_USERNAME') {this.value=''}"
                onblur="if(this.value === ''){this.value ='YOUR_ENVATO_USERNAME'}"
         /><br />
@@ -74,7 +74,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
     </p>
     <p>
         <label for="envato_api_key">Your Envato API Key:</label><br />
-        <input name="envato_api_key" id="envato_api_key" type="text" value="<?php print($envatoAPIKey); ?>"
+        <input name="envato_api_key" id="envato_api_key" type="text" value="<?=$envatoAPIKey;?>"
                onfocus="if(this.value === 'YOUR_ENVATO_API_KEY') {this.value=''}"
                onblur="if(this.value === ''){this.value ='YOUR_ENVATO_API_KEY'}"
         /><br />
@@ -86,7 +86,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
     </p>
     <p>
         <label for="envato_personal_token">Your Envato Personal Token:</label><br />
-        <input name="envato_personal_token" id="envato_personal_token" type="text" value="<?php print($envatoPersonalToken); ?>"
+        <input name="envato_personal_token" id="envato_personal_token" type="text" value="<?=$envatoPersonalToken;?>"
                onfocus="if(this.value === 'YOUR_ENVATO_PERSONAL_TOKEN') {this.value=''}"
                onblur="if(this.value === ''){this.value ='YOUR_ENVATO_PERSONAL_TOKEN'}"
         /><br />
@@ -103,7 +103,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
     <h2>1. Get Details About Purchase Code</h2>
     <p>
         <label for="target_purchase_code">Target Purchase Code:</label><br />
-        <input type="text" id="target_purchase_code" name="target_purchase_code" value="<?php print($targetPurchaseCode); ?>" /><br />
+        <input type="text" id="target_purchase_code" name="target_purchase_code" value="<?=$targetPurchaseCode;?>" /><br />
         <em>(Leave blank to skip, ex. one of your customer purchase code that you want to validate)</em>
     </p>
     <div class="clear">&nbsp;</div>
@@ -112,7 +112,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
     <h2>2. Get Details About Other Envato User</h2>
     <p>
         <label for="target_username">Target Username:</label><br />
-        <input type="text" id="target_username" name="target_username" value="<?php print($targetUsername); ?>" /><br />
+        <input type="text" id="target_username" name="target_username" value="<?=$targetUsername;?>" /><br />
         <em>(Leave blank to skip, ex. &quot;ThemeFusion&quot; - the team behind &quot;Avada&quot; - best-selling theme)</em>
     </p>
     <div class="clear">&nbsp;</div>
@@ -121,12 +121,12 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
     <h2>3. Check for Update of Plugin You Bought</h2>
     <p>
         <label for="target_plugin_id">Plugin ID:</label><br />
-        <input type="text" id="target_plugin_id" name="target_plugin_id" value="<?php print($targetPluginId); ?>" /><br />
+        <input type="text" id="target_plugin_id" name="target_plugin_id" value="<?=$targetPluginId;?>" /><br />
         <em>(Leave blank to skip, ex. &quot;2201708&quot; - ID of &quot;WordPress Social Stream&quot; - best-selling social plugin)</em>
     </p>
     <p>
         <label for="installed_plugin_version">Installed Plugin Version:</label><br />
-        <input type="text" id="installed_plugin_version"  name="installed_plugin_version" value="<?php print($installedPluginVersion); ?>" /><br />
+        <input type="text" id="installed_plugin_version"  name="installed_plugin_version" value="<?=$installedPluginVersion;?>" /><br />
         <em>(Leave blank to skip, ex. &quot;1.6.0&quot; - previous version number of &quot;WordPress Social Stream&quot;)</em>
     </p>
     <div class="clear">&nbsp;</div>
@@ -135,12 +135,12 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
     <h2>4.Check for Update of Theme You Bought</h2>
     <p>
         <label for="target_theme_id">Theme ID:</label><br />
-        <input type="text" id="target_theme_id" name="target_theme_id" value="<?php print($targetThemeId); ?>" /><br />
+        <input type="text" id="target_theme_id" name="target_theme_id" value="<?=$targetThemeId;?>" /><br />
         <em>(Leave blank to skip, ex. &quot;2833226&quot; - ID of &quot;Avada&quot; - best-selling theme)</em>
     </p>
     <p>
         <label for="installed_theme_version">Installed Theme Version:</label><br />
-        <input type="text" id="installed_theme_version" name="installed_theme_version" value="<?php print($installedThemeVersion); ?>" /><br />
+        <input type="text" id="installed_theme_version" name="installed_theme_version" value="<?=$installedThemeVersion;?>" /><br />
         <em>(Leave blank to skip, ex. &quot;3.9.3&quot; - previous version number of &quot;Avada&quot; - best-selling theme)</em>
     </p>
     <div class="clear">&nbsp;</div>
@@ -149,12 +149,12 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
     <h2>5. Get Envato Item Id of Purchased Plugin</h2>
     <p>
         <label for="target_plugin_name">Target Plugin Name:</label><br />
-        <input type="text" id="target_plugin_name" name="target_plugin_name" value="<?php print($targetPluginName); ?>" /><br />
+        <input type="text" id="target_plugin_name" name="target_plugin_name" value="<?=$targetPluginName;?>" /><br />
         <em>(Leave blank to skip, ex. &quot;WordPress Social Stream&quot;)</em>
     </p>
     <p>
         <label for="target_plugin_author">Target Plugin Author:</label><br />
-        <input type="text" id="target_plugin_author" name="target_plugin_author" value="<?php print($targetPluginAuthor); ?>" /><br />
+        <input type="text" id="target_plugin_author" name="target_plugin_author" value="<?=$targetPluginAuthor;?>" /><br />
         <em>(Leave blank to skip, ex. &quot;Lee Chestnutt&quot; - the Author of &quot;WordPress Social Stream&quot;)</em><br />
         <em>(<strong>Note:</strong> Keep in mind that the Envato API here checks ONLY (!) for plugin&#39;s install .php file&#39;s
             &quot;Author:&quot; metadata value, and not for Envato Author Username. They can be different.</em>
@@ -165,12 +165,12 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
     <h2>6. Get Envato Item Id of Purchased Theme</h2>
     <p>
         <label for="target_theme_name">Target Theme Name:</label><br />
-        <input type="text" id="target_theme_name" name="target_theme_name" value="<?php print($targetThemeName); ?>" /><br />
+        <input type="text" id="target_theme_name" name="target_theme_name" value="<?=$targetThemeName;?>" /><br />
         <em>(Leave blank to skip, ex. &quot;Avada&quot;)</em>
     </p>
     <p>
         <label for="target_theme_author">Target Theme Author:</label><br />
-        <input type="text" id="target_theme_author" name="target_theme_author" value="<?php print($targetThemeAuthor); ?>" /><br />
+        <input type="text" id="target_theme_author" name="target_theme_author" value="<?=$targetThemeAuthor;?>" /><br />
         <em>(Leave blank to skip, ex. &quot;ThemeFusion&quot; - the Author of &quot;Avada&quot;)</em><br />
         <em>(<strong>Note:</strong> Keep in mind that the Envato API here checks ONLY (!) for theme&#39;s style.css file&#39;s
             &quot;Author:&quot; metadata value, and not for Envato Author Username. They can be different.</em>
