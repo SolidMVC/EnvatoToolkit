@@ -89,9 +89,9 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
                 <?php foreach($plugin['licenses'] AS $license): ?>
                     <em>
                     Code: <?=$license['purchase_code'];?>,
-                    Type: <?=$license['license_type'];?>,
-                    Purchased: <?=$license['license_purchase_date'];?>,
-                    Expires: <?=$license['support_expiration_date'];?>,
+                    License: <?=$license['license'];?>,
+                    Purchased: <?=$license['license_purchase_date'];?> <?=$license['license_purchase_time'];?>,
+                    Expires: <?=$license['support_expiration_date'];?> <?=$license['support_expiration_time'];?>,
                     Status: <?=$license['support_active'] == 1 ? "Supported" : "Support Expired";?>
                     </em>
                     <br />
@@ -106,9 +106,9 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
                 <?php foreach($theme['licenses'] AS $license): ?>
                     <em>
                     Code: <?=$license['purchase_code'];?>,
-                    Type: <?=$license['license_type'];?>,
-                    Purchased: <?=$license['license_purchase_date'];?>,
-                    Expires: <?=$license['support_expiration_date'];?>,
+                    License: <?=$license['license'];?>,
+                    Purchased: <?=$license['license_purchase_date'];?> <?=$license['license_purchase_time'];?>,
+                    Expires: <?=$license['support_expiration_date'];?> <?=$license['support_expiration_time'];?>,
                     Status: <?=$license['support_active'] == 1 ? "Supported" : "Support Expired";?>
                     </em>
                     <br />
@@ -132,9 +132,9 @@ defined( 'ABSPATH' ) or die( 'No script kiddies, please!' );
                     <li>Purchase Code: <?=$targetPurchaseCode;?></li>
                     <li>Is Valid License: <?=$isValidTargetLicense ? 'Yes' : 'No';?></li>
                     <li>Buyer Username: <?=$targetLicenseBuyer;?></li>
-                    <li>License Type: <?=$targetLicenseType;?></li>
-                    <li>Purchased At: <?=$targetLicensePurchaseDate;?></li>
-                    <li>Supported Until: <?=$targetLicenseSupportExpiration;?></li>
+                    <li>License: <?=$targetLicense;?></li>
+                    <li>Purchased At: <?=$targetLicensePurchasedAt;?></li>
+                    <li>Supported Until: <?=$targetLicenseSupportedUntil;?></li>
                     <li>Status: <?=$targetLicenseSupportActive == 1 ? "Supported" : "Support Expired";?></li>
                 </ul>
             <?php endif; ?>

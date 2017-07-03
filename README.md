@@ -186,9 +186,9 @@ List of all different plugins you bought:
 	<?='Plugin Id: '.$pluginId.', Name: '.$plugin['name'];?>, Licenses:
 	<?php foreach($plugin['licenses'] AS $license): ?>
 		Code: <?=$license['purchase_code'];?>,
-		Type: <?=$license['license_type'];?>,
-		Purchased: <?=$license['license_purchase_date'];?>,
-		Expires: <?=$license['support_expiration_date'];?>
+		License: <?=$license['license'];?>,
+		Purchased: <?=$license['license_purchase_date'];?> <?=$license['license_purchase_time'];?>,
+		Expires: <?=$license['support_expiration_date'];?> <?=$license['support_expiration_time'];?>,
 		Support Status: <?=$license['support_active'];?>
 	<?php endforeach; ?>
 <?php endforeach; ?>
@@ -198,9 +198,9 @@ List of all different themes you bought:
 	<?='Theme Id: '.$themeId.', Name: '.$theme['name'];?>, Licenses:
 	<?php foreach($theme['licenses'] AS $license): ?>
 		Code: <?=$license['purchase_code'];?>,
-		Type: <?=$license['license_type'];?>,
-		Purchased: <?=$license['license_purchase_date'];?>,
-		Expires: <?=$license['support_expiration_date'];?>,
+		License: <?=$license['license'];?>,
+		Purchased: <?=$license['license_purchase_date'];?> <?=$license['license_purchase_time'];?>,
+		Expires: <?=$license['support_expiration_date'];?> <?=$license['support_expiration_time'];?>,
 		Status: <?=$license['support_active'] == 1 ? "Supported" : "Support Expired";?>
 	<?php endforeach; ?>
 <?php endforeach; ?>
@@ -215,8 +215,8 @@ Purchase Code: <?=$targetPurchaseCode;?>
 Is Valid License: <?=$isValidTargetLicense ? 'Yes' : 'No';?>
 Buyer Username: <?=$targetLicenseBuyer;?>
 License Type: <?=$targetLicenseType;?>
-Purchased At: <?=$targetLicensePurchaseDate;?>
-Supported Until: <?=$targetLicenseSupportExpiration;?>
+Purchased At: <?=$targetLicensePurchasedAt;?>
+Supported Until: <?=$targetLicenseSupportedUntil;?>
 Support Status: <?=$targetLicenseSupportActive == 1 ? "Supported" : "Support Expired";?>
 
 2. Details About Target Envato User - <?=$targetUsername;?>
@@ -301,9 +301,9 @@ $targetLicenseDetails = $objToolkit->getLicenseDetails($sanitizedTargetPurchaseC
 $view->targetPurchaseCode = esc_html($sanitizedTargetPurchaseCode); // Ready for print
 $view->isValidTargetLicense = $objToolkit->isValidLicense($sanitizedTargetPurchaseCode);
 $view->targetLicenseBuyer = $targetLicenseDetails['buyer_username'];
-$view->targetLicenseType = $targetLicenseDetails['license_type'];
-$view->targetLicensePurchaseDate = $targetLicenseDetails['license_purchase_date'].' '.$targetLicenseDetails['license_purchase_time'];
-$view->targetLicenseSupportExpiration = $targetLicenseDetails['support_expiration_date'].' '.$targetLicenseDetails['support_expiration_time'];
+$view->targetLicense = $targetLicenseDetails['license'];
+$view->targetLicensePurchasedAt = $targetLicenseDetails['license_purchase_date'].' '.$targetLicenseDetails['license_purchase_time'];
+$view->targetLicenseSupportedUntil = $targetLicenseDetails['support_expiration_date'].' '.$targetLicenseDetails['support_expiration_time'];
 $view->targetLicenseSupportActive = $targetLicenseDetails['support_active'];
 
 // 2. Details About Target Envato User
@@ -370,7 +370,7 @@ So there is no need to save your head revision number or last version on your se
 ## Changelog ##
 
 ### 1.3 ###
-* Added support for purchase time and license expiration time.
+* Added support for purchase time and license expiration time. Plus split to two fields on 'license_type' to 'license' and 'license_type'. 
 
 ### 1.2 ###
 * Added support for the situations if Envato API is down, plus added detailed error message handler.

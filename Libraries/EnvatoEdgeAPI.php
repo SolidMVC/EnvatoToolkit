@@ -148,11 +148,22 @@ class EnvatoEdgeAPI
             'envato_item_id' => $paramPurchase['item_id'],
             'envato_item_name' => (!empty($paramPurchase['item_name']) ? $paramPurchase['item_name'] : ''),
             // The 'misspell' of 'licence' instead of 'license' here is left by Envato and applies only for Edge API
-            'license_type' => (!empty($paramPurchase['licence']) ? $paramPurchase['licence'] : ''),
+            'license' => (!empty($paramPurchase['licence']) ? $paramPurchase['licence'] : ''),
             'license_sold' => (!empty($paramPurchase['created_at']) ? $paramPurchase['created_at'] : ''),
             'license_supported' => (!empty($paramPurchase['supported_until']) ? $paramPurchase['supported_until'] : ''),
             'purchase_code' => sanitize_text_field($paramPurchaseCode),
         );
+
+        $licenseType = "";
+        if($normalizedLicense['license'] == "Regular License")
+        {
+            $licenseType = "REGULAR";
+        } else if($normalizedLicense['license'] == "Extended License")
+        {
+            $licenseType = "EXTENDED";
+        }
+
+        $normalizedLicense['license_type'] = $licenseType;
         $normalizedLicense['license_purchase_date'] = (new \DateTime($normalizedLicense['license_sold']))->format('Y-m-d');
         $normalizedLicense['license_purchase_time'] = (new \DateTime($normalizedLicense['license_sold']))->format('H:i:s');
         $normalizedLicense['support_expiration_date'] = (new \DateTime($normalizedLicense['license_supported']))->format('Y-m-d');

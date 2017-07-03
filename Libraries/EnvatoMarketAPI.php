@@ -356,11 +356,22 @@ class EnvatoMarketAPI
             'buyer_username' => sanitize_text_field($paramBuyerUsername),
             'envato_item_id' => (!empty($paramPurchase['item']['id']) ? $paramPurchase['item']['id'] : ''),
             'envato_item_name' => (!empty($paramPurchase['item']['name']) ? $paramPurchase['item']['name'] : ''),
-            'license_type' => (!empty($paramPurchase['license']) ? $paramPurchase['license'] : ''),
+            'license' => (!empty($paramPurchase['license']) ? $paramPurchase['license'] : ''),
             'license_sold' => (!empty($paramPurchase['sold_at']) ? $paramPurchase['sold_at'] : ''),
             'license_supported' => (!empty($paramPurchase['supported_until']) ? $paramPurchase['supported_until'] : ''),
             'purchase_code' => (!empty($paramPurchase['code']) ? $paramPurchase['code'] : ''),
         );
+
+        $licenseType = "";
+        if($normalizedLicense['license'] == "Regular License")
+        {
+            $licenseType = "REGULAR";
+        } else if($normalizedLicense['license'] == "Extended License")
+        {
+            $licenseType = "EXTENDED";
+        }
+
+        $normalizedLicense['license_type'] = $licenseType;
         $normalizedLicense['license_purchase_date'] = (new \DateTime($normalizedLicense['license_sold']))->format('Y-m-d');
         $normalizedLicense['license_purchase_time'] = (new \DateTime($normalizedLicense['license_sold']))->format('H:i:s');
         $normalizedLicense['support_expiration_date'] = (new \DateTime($normalizedLicense['license_supported']))->format('Y-m-d');
