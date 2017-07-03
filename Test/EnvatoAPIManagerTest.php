@@ -100,8 +100,8 @@ if(isset($_POST['envato_check']))
     {
         $targetLicenseBuyer = $targetLicenseDetails['buyer_username'];
         $targetLicenseType = $targetLicenseDetails['license_type'];
-        $targetLicensePurchaseDate = $targetLicenseDetails['license_purchase_date'];
-        $targetLicenseSupportExpiration = $targetLicenseDetails['support_expiration_date'];
+        $targetLicensePurchaseDate = $targetLicenseDetails['license_purchase_date'].' '.$targetLicenseDetails['license_purchase_time'];
+        $targetLicenseSupportExpiration = $targetLicenseDetails['support_expiration_date'].' '.$targetLicenseDetails['support_expiration_time'];
         $targetLicenseSupportActive = $targetLicenseDetails['support_active'];
     } else
     {

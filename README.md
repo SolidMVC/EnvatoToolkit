@@ -302,8 +302,8 @@ $view->targetPurchaseCode = esc_html($sanitizedTargetPurchaseCode); // Ready for
 $view->isValidTargetLicense = $objToolkit->isValidLicense($sanitizedTargetPurchaseCode);
 $view->targetLicenseBuyer = $targetLicenseDetails['buyer_username'];
 $view->targetLicenseType = $targetLicenseDetails['license_type'];
-$view->targetLicensePurchaseDate = $targetLicenseDetails['license_purchase_date'];
-$view->targetLicenseSupportExpiration = $targetLicenseDetails['support_expiration_date'];
+$view->targetLicensePurchaseDate = $targetLicenseDetails['license_purchase_date'].' '.$targetLicenseDetails['license_purchase_time'];
+$view->targetLicenseSupportExpiration = $targetLicenseDetails['support_expiration_date'].' '.$targetLicenseDetails['support_expiration_time'];
 $view->targetLicenseSupportActive = $targetLicenseDetails['support_active'];
 
 // 2. Details About Target Envato User
@@ -369,6 +369,9 @@ So there is no need to save your head revision number or last version on your se
 
 ## Changelog ##
 
+### 1.3 ###
+* Added support for purchase time and license expiration time.
+
 ### 1.2 ###
 * Added support for the situations if Envato API is down, plus added detailed error message handler.
 
@@ -380,6 +383,9 @@ So there is no need to save your head revision number or last version on your se
 
 
 ## Upgrade Notice ##
+
+### 1.3 ###
+* Just drag and drop new code folder.
 
 ### 1.2 ###
 * Just drag and drop new code folder.

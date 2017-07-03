@@ -16,7 +16,7 @@
 if(!class_exists('EnvatoMarketAPI')):
 class EnvatoMarketAPI
 {
-    const VERSION = '1.2';
+    const VERSION = '1.3';
     const API_AGENT = 'EnvatoToolkit/%s';
 
     protected $debugMode 	            = 0;
@@ -362,7 +362,9 @@ class EnvatoMarketAPI
             'purchase_code' => (!empty($paramPurchase['code']) ? $paramPurchase['code'] : ''),
         );
         $normalizedLicense['license_purchase_date'] = (new \DateTime($normalizedLicense['license_sold']))->format('Y-m-d');
+        $normalizedLicense['license_purchase_time'] = (new \DateTime($normalizedLicense['license_sold']))->format('H:i:s');
         $normalizedLicense['support_expiration_date'] = (new \DateTime($normalizedLicense['license_supported']))->format('Y-m-d');
+        $normalizedLicense['support_expiration_time'] = (new \DateTime($normalizedLicense['license_supported']))->format('H:i:s');
         if((new \DateTime($normalizedLicense['license_supported']))->getTimestamp() < (new \DateTime('now'))->getTimestamp())
         {
             // Already expired
