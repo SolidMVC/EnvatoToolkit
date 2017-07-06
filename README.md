@@ -4,7 +4,7 @@
 
 **Website Link:** https://wordpress.org/plugins/toolkit-for-envato/
 
-**Tags:** Envato, Envato API, purchase validator, update checker, license, code validation, Toolkit, script, stats, author, CodeCanyon, Marketplace, ThemeForest
+**Tags:** Envato, API, purchase validator, update checker, license, validation, Toolkit, CodeCanyon, Marketplace, ThemeForest
 
 **Requires at least:** 4.6
 
