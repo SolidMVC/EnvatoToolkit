@@ -8,8 +8,8 @@
  * @copyright KestutisIT
  * @license MIT License
  */
-require_once('EnvatoEdgeAPI.php');
-require_once('EnvatoMarketAPI.php');
+require_once 'EnvatoEdgeAPI.php';
+require_once 'EnvatoMarketAPI.php';
 
 if(!class_exists('EnvatoAPIManager')):
 class EnvatoAPIManager
@@ -115,7 +115,7 @@ class EnvatoAPIManager
 
             // Save okay/error messages
             $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
-            $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
+            $this->savedOkayMessages = $objEnvatoAPI->getOkayMessages();
             $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         }
 
@@ -153,7 +153,7 @@ class EnvatoAPIManager
 
             // Save okay/error messages
             $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
-            $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
+            $this->savedOkayMessages = $objEnvatoAPI->getOkayMessages();
             $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         }
 
@@ -216,7 +216,7 @@ class EnvatoAPIManager
 
             // Save okay/error messages
             $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
-            $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
+            $this->savedOkayMessages = $objEnvatoAPI->getOkayMessages();
             $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         } else
         {
@@ -264,7 +264,7 @@ class EnvatoAPIManager
 
             // Save okay/error messages
             $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
-            $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
+            $this->savedOkayMessages = $objEnvatoAPI->getOkayMessages();
             $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         }
 
@@ -299,7 +299,7 @@ class EnvatoAPIManager
 
             // Save okay/error messages
             $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
-            $this->savedOkayMessages = $objEnvatoAPI->getErrorMessages();
+            $this->savedOkayMessages = $objEnvatoAPI->getOkayMessages();
             $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
         }
 

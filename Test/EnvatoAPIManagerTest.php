@@ -169,7 +169,7 @@ if(isset($_POST['envato_check']))
     $goBackUrl = 'index.php';
 
     // Print the template
-    require('template.TestResults.php');
+    require 'template.TestResults.php';
 } else
 {
     // Your details
@@ -213,7 +213,7 @@ if(isset($_POST['envato_check']))
     }
 
     // Print the template
-    require('template.TestInput.php');
+    require 'template.TestInput.php';
 }
 
 

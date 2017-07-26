@@ -30,8 +30,8 @@ if(session_status() !== PHP_SESSION_ACTIVE)
 }
 
 define('WP_USE_THEMES', FALSE); // This is a test class, so we don't need to load
-require_once('../wp-blog-header.php'); // Note: adapt to match your path
-require_once(ABSPATH . '/Libraries/EnvatoAPIManager.php');
+require_once '../wp-blog-header.php'; // Note: adapt to match your path
+require_once ABSPATH.'/Libraries/EnvatoAPIManager.php';
 
 // Load the test controller
-require_once('EnvatoAPIManagerTest.php');
+require_once 'EnvatoAPIManagerTest.php';
