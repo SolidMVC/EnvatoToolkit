@@ -15,9 +15,7 @@ if(!class_exists('EnvatoAPIManager')):
 class EnvatoAPIManager
 {
     protected $debugMode 	            = 0;
-    protected $savedDebugMessages       = array();
-    protected $savedOkayMessages        = array();
-    protected $savedErrorMessages       = array();
+    protected $savedMessages            = array();
     protected $username                 = '';
     protected $apiKey                   = '';
     protected $personalToken            = '';
@@ -44,17 +42,33 @@ class EnvatoAPIManager
 
     public function getSavedDebugMessages()
     {
-        return $this->savedDebugMessages;
+        return isset($this->savedMessages['debug']) ? $this->savedMessages['debug'] : array();
     }
 
     public function getSavedOkayMessages()
     {
-        return $this->savedOkayMessages;
+        return isset($this->savedMessages['okay']) ? $this->savedMessages['okay'] : array();
     }
 
     public function getSavedErrorMessages()
     {
-        return $this->savedErrorMessages;
+        return isset($this->savedMessages['error']) ? $this->savedMessages['error'] : array();
+    }
+
+    private function saveAllMessages($paramArrMessages)
+    {
+        if(isset($paramArrMessages['debug']))
+        {
+            $this->savedMessages['debug'] = array_merge($this->getSavedDebugMessages(), $paramArrMessages['debug']);
+        }
+        if(isset($paramArrMessages['okay']))
+        {
+            $this->savedMessages['okay'] = array_merge($this->getSavedOkayMessages(), $paramArrMessages['okay']);
+        }
+        if(isset($paramArrMessages['error']))
+        {
+            $this->savedMessages['error'] = array_merge($this->getSavedErrorMessages(), $paramArrMessages['error']);
+        }
     }
 
 
@@ -113,10 +127,8 @@ class EnvatoAPIManager
                 $this->cachedLicenses[$validPurchaseCode] = $licenseDetails;
             }
 
-            // Save okay/error messages
-            $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
-            $this->savedOkayMessages = $objEnvatoAPI->getOkayMessages();
-            $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
+            // Save all messages
+            $this->saveAllMessages($objEnvatoAPI->getAllMessages());
         }
 
         return $licenseDetails;
@@ -151,10 +163,8 @@ class EnvatoAPIManager
             // Get user details for specified username
             $userDetails = $objEnvatoAPI->getUser($validUsername);
 
-            // Save okay/error messages
-            $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
-            $this->savedOkayMessages = $objEnvatoAPI->getOkayMessages();
-            $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
+            // Save all messages
+            $this->saveAllMessages($objEnvatoAPI->getAllMessages());
         }
 
         return $userDetails;
@@ -214,10 +224,8 @@ class EnvatoAPIManager
                 }
             }
 
-            // Save okay/error messages
-            $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
-            $this->savedOkayMessages = $objEnvatoAPI->getOkayMessages();
-            $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
+            // Save all messages
+            $this->saveAllMessages($objEnvatoAPI->getAllMessages());
         } else
         {
             // Load from cache
@@ -262,10 +270,8 @@ class EnvatoAPIManager
             // Add item to cache
             $this->cachedItems[$validEnvatoItemId] = $itemDetails;
 
-            // Save okay/error messages
-            $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
-            $this->savedOkayMessages = $objEnvatoAPI->getOkayMessages();
-            $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
+            // Save all messages
+            $this->saveAllMessages($objEnvatoAPI->getAllMessages());
         }
 
         return $itemDetails;
@@ -297,10 +303,8 @@ class EnvatoAPIManager
             // Add to cache
             $this->cachedDownloadURLs[$validEnvatoItemId] = $downloadURL;
 
-            // Save okay/error messages
-            $this->savedDebugMessages = $objEnvatoAPI->getDebugMessages();
-            $this->savedOkayMessages = $objEnvatoAPI->getOkayMessages();
-            $this->savedErrorMessages = $objEnvatoAPI->getErrorMessages();
+            // Save all messages
+            $this->saveAllMessages($objEnvatoAPI->getAllMessages());
         }
 
         return $downloadURL;

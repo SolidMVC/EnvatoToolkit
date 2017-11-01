@@ -8,7 +8,9 @@
 
 **Requires at least:** 4.6
 
-**Tested up to:** 4.8
+**Tested up to:** 4.9
+
+**Requires PHP:** 5.4
 
 **Stable tag:** trunk
 
@@ -369,6 +371,9 @@ So there is no need to save your head revision number or last version on your se
 
 ## Changelog ##
 
+### 1.4 ###
+* Improved debugging.
+
 ### 1.3 ###
 * Added support for purchase time and license expiration time. Plus split to two fields on 'license_type' to 'license' and 'license_type'. 
 
@@ -383,6 +388,9 @@ So there is no need to save your head revision number or last version on your se
 
 
 ## Upgrade Notice ##
+
+### 1.4 ###
+* Just drag and drop new plugin folder.
 
 ### 1.3 ###
 * Just drag and drop new code folder.

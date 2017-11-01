@@ -16,7 +16,7 @@
 if(!class_exists('EnvatoMarketAPI')):
 class EnvatoMarketAPI
 {
-    const VERSION = '1.3';
+    const VERSION = '1.4';
     const API_AGENT = 'EnvatoToolkit/%s';
 
     protected $debugMode 	            = 0;
@@ -62,6 +62,15 @@ class EnvatoMarketAPI
         $this->debugMessages = array();
         $this->okayMessages = array();
         $this->errorMessages = array();
+    }
+
+    public function getAllMessages()
+    {
+        return array(
+            'debug' => $this->debugMessages,
+            'okay' => $this->okayMessages,
+            'error' => $this->errorMessages,
+        );
     }
 
     public function getDebugMessages()
